@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import NavigationBar from "./components/NavigationBar";
-import { ShirtConfiguration } from "./components/ShirtConfiguration";
+import { ShirtConfiguration } from "./pages/ShirtConfiguration";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import './index.css'

@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import colletto from "../assets/images/collar.webp";
 import tessuto from "../assets/images/fabric.webp";
 import polsino from "../assets/images/cuff.webp";
-import { collarSelectionAtom } from "./ShirtConfiguration";
-import { fabricSelectionAtom } from "./ShirtConfiguration";
-import { cuffSelectionAtom } from "./ShirtConfiguration";
+import { collarSelectionAtom } from "../pages/ShirtConfiguration";
+import { fabricSelectionAtom } from "../pages/ShirtConfiguration";
+import { cuffSelectionAtom } from "../pages/ShirtConfiguration";
 import {Collar, Cuff, Fabric } from '../interfaces/interfaces';
 
 export function CollarCard({ collar }: { collar: Collar }) {

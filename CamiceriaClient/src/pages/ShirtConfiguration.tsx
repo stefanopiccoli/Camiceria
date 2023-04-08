@@ -1,9 +1,9 @@
 import React, { useEffect, useReducer, useState } from "react";
 import ReactDOM from "react-dom";
 import iniziali from "../assets/images/sign.webp";
-import { CollarCard } from "./Card";
-import { FabricCard } from "./Card";
-import { CuffCard } from "./Card";
+import { CollarCard } from "../components/Card";
+import { FabricCard } from "../components/Card";
+import { CuffCard } from "../components/Card";
 import { atom, useAtom } from "jotai";
 import {
   Collar,
