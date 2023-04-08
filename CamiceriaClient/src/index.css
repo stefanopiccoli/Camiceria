@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html{
+    @apply font-serif;
+}
+
+#steps>button[disabled]{
+    @apply text-neutral-500/50;
+}
+
+input[type="text"]{
+    @apply border rounded-md text-lg;
+}
