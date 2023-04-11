@@ -1,5 +1,4 @@
 import React, { useEffect, useReducer, useState } from "react";
-import ReactDOM from "react-dom";
 import iniziali from "../assets/images/sign.webp";
 import { CollarCard } from "../components/Card";
 import { FabricCard } from "../components/Card";
@@ -13,71 +12,95 @@ import {
   Sign,
   Selection,
 } from "../interfaces/interfaces";
+import Loading from "../components/Loading";
+import { create } from "zustand";
 
-//Gestione degli step per rendering delle categorie
-export const stepAtom = atom<string>("collar");
+// //Gestione degli step per rendering delle categorie
+// export const stepAtom = atom<string>("collar");
 
-//Selettore colletto
-export const collarSelectionAtom = atom<Collar>({
-  id: 0,
-  name: "",
-  buttons: 1,
-});
-//Selettore tessuto
-export const fabricSelectionAtom = atom<Fabric>({
-  id: 0,
-  name: "",
-});
+// //Selettore colletto
+// export const collarSelectionAtom = atom<Collar>({
+//   id: 0,
+//   name: "",
+//   buttons: 1,
+// });
+// //Selettore tessuto
+// export const fabricSelectionAtom = atom<Fabric>({
+//   id: 0,
+//   name: "",
+// });
 
-//Selettore polsino
-export const cuffSelectionAtom = atom<Cuff>({
-  id: 0,
-  name: "",
-});
-//Selettore ricami
-export const signSelectionAtom = atom<Sign>({
-  do: false,
-  text: "",
-  font: "italic",
-});
+// //Selettore polsino
+// export const cuffSelectionAtom = atom<Cuff>({
+//   id: 0,
+//   name: "",
+// });
+// //Selettore ricami
+// export const signSelectionAtom = atom<Sign>({
+//   do: false,
+//   text: "",
+//   font: "italic",
+// });
 
-// const initialSelection:Selection = {
-//   step:"collar",
-//   collar:{
-//     id:0,
-//     name:"",
-//     buttons:1
-//   },
-//   fabric:{
-//     id:0,
-//     name:"",
-//   },
-//   cuff:{
-//     id:0,
-//     name:"",
-//   },
-//   sign:{
-//     do: false,
-//     text:"",
-//   }
+export const loadingAtom = atom<Boolean>(true);
+
+type SelectionActions = {
+  updateStep: (step: Selection["step"]) => void;
+  updateCollar: (collar: Selection["collar"]) => void;
+  updateFabric: (fabric: Selection["fabric"]) => void;
+  updateCuff: (cuff: Selection["cuff"]) => void;
+  updateSign: (sign: Partial<Selection["sign"]>) => void;
+};
+
+// const initialSelection: (Selection & SelectionActions) = {
+
 // }
 
-// export const selectionAtom = atom<Selection>(initialSelection);
+export const selectionStore = create<Selection & SelectionActions>((set) => ({
+  step: "collar",
+  updateStep: (step) => set(()=>({step:step})),
+  collar: {
+    id: 0,
+    name: "",
+    buttons: 1,
+  },
+  updateCollar: (collar) => set(()=>({...collar,collar})),
+  fabric: {
+    id: 0,
+    name: "",
+  },
+  updateFabric: (fabric) => set(()=>({...fabric,fabric})),
+  cuff: {
+    id: 0,
+    name: "",
+  },
+  updateCuff: (cuff) => set(()=>({...cuff,cuff})),
+  sign: {
+    do: false,
+    text: "",
+  },
+  updateSign: (sign) => set(()=>({...sign,sign})),
+}));
 
 export function ShirtConfiguration() {
-  const [step, setStep] = useAtom(stepAtom);
-  const [collarSelection, setCollarSelection] = useAtom(collarSelectionAtom);
-  const [fabricSelection, setFabricSelection] = useAtom(fabricSelectionAtom);
-  const [cuffSelection, setCuffSelection] = useAtom(cuffSelectionAtom);
-  const [signSelection, setSignSelection] = useAtom(signSelectionAtom);
+  // const [step, setStep] = useAtom(stepAtom);
+  // const [collarSelection, setCollarSelection] = useAtom(collarSelectionAtom);
+  // const [fabricSelection, setFabricSelection] = useAtom(fabricSelectionAtom);
+  // const [cuffSelection, setCuffSelection] = useAtom(cuffSelectionAtom);
+  // const [signSelection, setSignSelection] = useAtom(signSelectionAtom);
+
+  const [loading, setLoading] = useAtom(loadingAtom);
   const [collars, setCollars] = useState<Collar[]>([]);
   const [fabrics, setFabrics] = useState<Fabric[]>([]);
   const [cuffs, setCuffs] = useState<Cuff[]>([]);
-  
+
+  const selection = selectionStore();
+
   const getData = async (
     api: string,
     setter: React.Dispatch<React.SetStateAction<Collar[] | Fabric[] | Cuff[]>>
   ) => {
+    setLoading(true);
     try {
       const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
         method: "GET",
@@ -88,24 +111,26 @@ export function ShirtConfiguration() {
 
       let result = await response.json();
       setter(result);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getData("/api/v1/collars",setCollars);
-    getData("/api/v1/fabrics",setFabrics);
-    getData("/api/v1/cuffs",setCuffs);
+    getData("/api/v1/collars", setCollars);
+    getData("/api/v1/fabrics", setFabrics);
+    getData("/api/v1/cuffs", setCuffs);
   }, []);
 
   let el;
-  switch (step) {
+  switch (selection.step) {
     case "collar":
       el = (
         <CardsList
           type="collar"
-          selector={collarSelection}
+          selector={selection.collar}
           list={collars}
           next="fabric"
         ></CardsList>
@@ -115,7 +140,7 @@ export function ShirtConfiguration() {
       el = (
         <CardsList
           type="fabric"
-          selector={fabricSelection}
+          selector={selection.fabric}
           list={fabrics}
           prev="collar"
           next="cuff"
@@ -126,7 +151,7 @@ export function ShirtConfiguration() {
       el = (
         <CardsList
           type="cuff"
-          selector={cuffSelection}
+          selector={selection.cuff}
           list={cuffs}
           prev="fabric"
           next="sign"
@@ -146,16 +171,14 @@ export function ShirtConfiguration() {
                 type="radio"
                 name="sign"
                 value="true"
-                checked={signSelection.do}
+                checked={selection.sign.do}
                 id="signradio"
                 onChange={() =>
-                  setSignSelection((t) => ({
-                    ...t,
-                    do:
+                  selection.updateSign({do:
                       document
                         .querySelector('input[name="sign"]:checked')
-                        ?.getAttribute("value") === "true",
-                  }))
+                        ?.getAttribute("value") === "true",}
+                  )
                 }
               />
               <input
@@ -164,16 +187,13 @@ export function ShirtConfiguration() {
                 minLength={1}
                 style={{ width: "10rem" }}
                 className="d-inline"
-                disabled={!signSelection.do}
+                disabled={!selection.sign.do}
                 onChange={(e) =>
-                  setSignSelection((t) => ({
-                    ...t,
-                    text: e.target.value,
-                  }))
+                  selection.updateSign({text: e.target.value})
                 }
               />
               <br />
-              {signSelection.do ? (
+              {selection.sign.do ? (
                 <>
                   <input
                     type="radio"
@@ -181,10 +201,8 @@ export function ShirtConfiguration() {
                     value="italic"
                     defaultChecked
                     onChange={() =>
-                      setSignSelection((t) => ({
-                        ...t,
-                        font: "italic",
-                      }))
+                      selection.updateSign({font: "italic",
+                      })
                     }
                   />
                   Corsivo
@@ -193,28 +211,28 @@ export function ShirtConfiguration() {
                     name="signfont"
                     value="capitalized"
                     onChange={() =>
-                      setSignSelection((t) => ({
-                        ...t,
+                      selection.updateSign({
                         font: "capitalized",
-                      }))
+                      })
                     }
                   />
                   Stampatello
                 </>
               ) : null}
+              <br />
+              <br />
               <input
                 type="radio"
                 name="sign"
                 value="false"
                 defaultChecked
                 onChange={() =>
-                  setSignSelection((t) => ({
-                    ...t,
+                  selection.updateSign({
                     do:
                       document
                         .querySelector('input[name="sign"]:checked')
                         ?.getAttribute("value") === "true",
-                  }))
+                  })
                 }
               />
               No, grazie
@@ -238,10 +256,10 @@ export function ShirtConfiguration() {
               className="sticky top-14 h-16 w-full bg-white flex justify-center items-center gap-4 border-bottom border-2 overflow-x-scroll"
               id="steps"
             >
-              <button onClick={() => setStep("collar")}>
+              <button onClick={() => selection.updateStep("collar")}>
                 <span
                   className={
-                    step === "collar"
+                    selection.step === "collar"
                       ? "border-b-[3px] border-b-slate-800 "
                       : ""
                   }
@@ -250,12 +268,12 @@ export function ShirtConfiguration() {
                 </span>
               </button>
               <button
-                disabled={collarSelection.id === 0}
-                onClick={() => setStep("fabric")}
+                disabled={selection.collar.id === 0}
+                onClick={() => selection.updateStep("fabric")}
               >
                 <span
                   className={
-                    step === "fabric"
+                    selection.step === "fabric"
                       ? "border-b-[3px] border-b-slate-800 "
                       : ""
                   }
@@ -264,12 +282,12 @@ export function ShirtConfiguration() {
                 </span>
               </button>
               <button
-                disabled={collarSelection.id === 0 || fabricSelection.id === 0}
-                onClick={() => setStep("cuff")}
+                disabled={selection.collar.id === 0 || selection.fabric.id === 0}
+                onClick={() => selection.updateStep("cuff")}
               >
                 <span
                   className={
-                    step === "cuff" ? "border-b-[3px] border-b-slate-800" : ""
+                    selection.step === "cuff" ? "border-b-[3px] border-b-slate-800" : ""
                   }
                 >
                   POLSINO
@@ -277,15 +295,15 @@ export function ShirtConfiguration() {
               </button>
               <button
                 disabled={
-                  collarSelection.id === 0 ||
-                  fabricSelection.id === 0 ||
-                  cuffSelection.id === 0
+                  selection.collar.id === 0 ||
+                  selection.fabric.id === 0 ||
+                  selection.cuff.id === 0
                 }
-                onClick={() => setStep("sign")}
+                onClick={() => selection.updateStep("sign")}
               >
                 <span
                   className={
-                    step === "sign" ? "border-b-[3px] border-b-slate-800" : ""
+                    selection.step === "sign" ? "border-b-[3px] border-b-slate-800" : ""
                   }
                 >
                   RICAMI
@@ -338,24 +356,33 @@ export function CardsList({
   next?: StepNavigation;
   prev?: StepNavigation;
 }) {
-  const [step, setStep] = useAtom(stepAtom);
+  // const [step, setStep] = useAtom(stepAtom);
+  const [loading, setLoading] = useAtom(loadingAtom);
+
+  let el;
+
+  if (loading) {
+    el = <Loading />;
+  } else
+    el = (
+      <div className="grid grid-cols-2 px-2">
+        {list.map((item, index) => (
+          <div key={index} className="col m-2">
+            {type === "collar" ? (
+              <CollarCard key={item.id} collar={item} />
+            ) : null}
+            {type === "fabric" ? (
+              <FabricCard key={item.id} fabric={item} />
+            ) : null}
+            {type === "cuff" ? <CuffCard key={item.id} cuff={item} /> : null}
+          </div>
+        ))}
+      </div>
+    );
+
   return (
     <div>
-      <div className="grid grid-cols-2 px-2">
-        {list.map((item,index) => {
-          return (
-            <div key={index} className="col m-2">
-              {type === "collar" ? (
-                <CollarCard key={item.id} collar={item} />
-              ) : null}
-              {type === "fabric" ? (
-                <FabricCard key={item.id} fabric={item} />
-              ) : null}
-              {type === "cuff" ? <CuffCard key={item.id} cuff={item} /> : null}
-            </div>
-          );
-        })}
-      </div>
+      {el}
       <StepNavigationButton
         selector={selector}
         prev={prev}
@@ -374,15 +401,20 @@ export function StepNavigationButton({
   next?: StepNavigation;
   prev?: StepNavigation;
 }) {
-  const [step, setStep] = useAtom(stepAtom);
+  // const [step, setStep] = useAtom(stepAtom);
+  const updateStep = selectionStore((store)=>store.updateStep);
   return (
-    <div className="fixed grid grid-flow-col items-center border-t px-4 border-t-neutral-300 bottom-0 w-full h-16 bg-white ">
+    <div
+      className="fixed grid grid-flow-col items-center border-t px-4 border-t-neutral-300 bottom-0 w-full h-16 bg-white "
+      id="buttons"
+    >
       {typeof prev !== "undefined" ? (
         <button
           className="bg-red-900 text-white h-3/4 w-2/5"
           style={{ width: "6rem" }}
           onClick={() => {
-            setStep((t) => prev!);
+            // setStep((t) => prev!);
+            updateStep(prev);
           }}
         >
           Indietro
@@ -394,7 +426,8 @@ export function StepNavigationButton({
           style={{ width: "6rem" }}
           disabled={selector?.id === 0}
           onClick={() => {
-            setStep((t) => next!);
+            // setStep((t) => next!);
+            updateStep(next);
           }}
         >
           Avanti

@@ -12,7 +12,8 @@
     "font-awesome": "^4.7.0",
     "jotai": "^2.0.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zustand": "^4.3.7"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",

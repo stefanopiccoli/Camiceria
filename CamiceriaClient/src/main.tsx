@@ -7,7 +7,6 @@ import Home from "./pages/Home";
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
     <BrowserRouter>
     <NavigationBar></NavigationBar>
       <Routes>
@@ -16,6 +15,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <Route path="/camicie-personalizzate" element={<ShirtConfiguration />} />
       </Routes>
     </BrowserRouter>
-    {/* <ShirtConfiguration></ShirtConfiguration> */}
-  </React.StrictMode>
+  
 );

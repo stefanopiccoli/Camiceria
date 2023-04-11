@@ -10,6 +10,10 @@ html{
     @apply text-neutral-500/50;
 }
 
+#buttons>button[disabled]{
+    @apply bg-neutral-500;
+}
+
 input[type="text"]{
     @apply border rounded-md text-lg;
 }
