@@ -17,3 +17,7 @@ html{
 input[type="text"]{
     @apply border rounded-md text-lg;
 }
+
+#measurebox input[type="text"]{
+    @apply w-16 border-0 border-b-2 bg-transparent border-black rounded-none text-end;
+}

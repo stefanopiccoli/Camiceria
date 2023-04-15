@@ -1,9 +1,9 @@
 import React, { useEffect, useReducer, useState } from "react";
 import iniziali from "../assets/images/sign.webp";
+import misure from "../assets/images/Misure.png";
 import { CollarCard } from "../components/Card";
 import { FabricCard } from "../components/Card";
 import { CuffCard } from "../components/Card";
-import { atom, useAtom } from "jotai";
 import {
   Collar,
   Cuff,
@@ -15,60 +15,66 @@ import {
 import Loading from "../components/Loading";
 import { create } from "zustand";
 
-export const loadingAtom = atom<Boolean>(true);
-
 type SelectionActions = {
   updateStep: (step: Selection["step"]) => void;
   updateCollar: (collar: Selection["collar"]) => void;
   updateFabric: (fabric: Selection["fabric"]) => void;
   updateCuff: (cuff: Selection["cuff"]) => void;
   updateSign: (sign: Partial<Sign>) => void;
-
+  updateLoading: (loading: boolean) => void;
 };
 
 export const selectionStore = create<Selection & SelectionActions>((set) => ({
-  step: "collar",
-  updateStep: (step) => set(()=>({step: step})),
+  loading: true,
+  updateLoading: (loading) => set(() => ({ loading: loading })),
+  step: "measure",
+  updateStep: (step) => set(() => ({ step: step })),
   collar: {
     id: 0,
     name: "",
     buttons: 1,
   },
-  updateCollar: (collar) => set(()=>({collar: collar})),
+  updateCollar: (collar) => set(() => ({ collar: collar })),
   fabric: {
     id: 0,
     name: "",
   },
-  updateFabric: (fabric) => set(()=>({fabric: fabric})),
+  updateFabric: (fabric) => set(() => ({ fabric: fabric })),
   cuff: {
     id: 0,
     name: "",
   },
-  updateCuff: (cuff) => set(()=>({cuff: cuff})),
+  updateCuff: (cuff) => set(() => ({ cuff: cuff })),
   sign: {
     do: false,
     text: "",
   },
-  updateSign: (signo) => set((state)=> ({sign: {...state.sign, ...signo}})),
- 
+  updateSign: (signo) =>
+    set((state) => ({ sign: { ...state.sign, ...signo } })),
+  measure: {
+    neck: 0,
+    shoulder: 0,
+    chest: 0,
+    hips: 0,
+    sleeve: 0,
+  },
 }));
 
 export function ShirtConfiguration() {
+  const updateLoading = selectionStore((store) => store.updateLoading);
 
-  const [loading, setLoading] = useAtom(loadingAtom);
   const [collars, setCollars] = useState<Collar[]>([]);
   const [fabrics, setFabrics] = useState<Fabric[]>([]);
   const [cuffs, setCuffs] = useState<Cuff[]>([]);
 
   const selection = selectionStore();
-  const updateSign = selectionStore((state)=> state.updateSign);
-  
+  const updateSign = selectionStore((state) => state.updateSign);
 
   const getData = async (
     api: string,
     setter: React.Dispatch<React.SetStateAction<Collar[] | Fabric[] | Cuff[]>>
   ) => {
-    setLoading(true);
+    updateLoading(true);
     try {
       const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
         method: "GET",
@@ -79,9 +85,9 @@ export function ShirtConfiguration() {
 
       let result = await response.json();
       setter(result);
-      setLoading(false);
+      updateLoading(false);
     } catch (error) {
-      setLoading(false);
+      updateLoading(false);
       console.log(error);
     }
   };
@@ -89,7 +95,7 @@ export function ShirtConfiguration() {
   useEffect(() => {
     getData("/api/v1/collars", setCollars);
     getData("/api/v1/fabrics", setFabrics);
-    getData("/api/v1/cuffs", setCuffs);    
+    getData("/api/v1/cuffs", setCuffs);
   }, []);
 
   let el;
@@ -141,10 +147,7 @@ export function ShirtConfiguration() {
                 value="true"
                 checked={selection.sign.do}
                 id="signradio"
-                onChange={() =>
-                  updateSign({do:true}
-                  )
-                }
+                onChange={() => updateSign({ do: true })}
               />
               <input
                 type="text"
@@ -153,9 +156,7 @@ export function ShirtConfiguration() {
                 style={{ width: "10rem" }}
                 className="d-inline"
                 disabled={!selection.sign.do}
-                onChange={(e) =>
-                  updateSign({text: e.target.value})
-                }
+                onChange={(e) => updateSign({ text: e.target.value })}
               />
               <br />
               {selection.sign.do ? (
@@ -165,10 +166,7 @@ export function ShirtConfiguration() {
                     name="signfont"
                     value="italic"
                     defaultChecked
-                    onChange={() =>
-                      updateSign({font: "italic",
-                      })
-                    }
+                    onChange={() => updateSign({ font: "italic" })}
                   />
                   Corsivo
                   <input
@@ -190,10 +188,9 @@ export function ShirtConfiguration() {
                 type="radio"
                 name="sign"
                 value="false"
-                
                 onChange={() =>
                   updateSign({
-                    do:false
+                    do: false,
                   })
                 }
               />
@@ -204,8 +201,47 @@ export function ShirtConfiguration() {
         </>
       );
       break;
+    case "measure":
+      el = (
+        <div id="measurebox">
+          <img src={misure} />
+          <div className="grid grid-cols-2 px-4 gap-4 text-black">
+            <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
+              <span>Collo</span>
+              <br />
+              <input type="text" name="" maxLength={3} inputMode="numeric" />
+              <span className="ml-2">cm</span>
+            </div>
+            <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
+              <span>Spalle</span>
+              <br />
+              <input type="text" name="" maxLength={3} inputMode="numeric" />
+              <span className="ml-2">cm</span>
+            </div>
+            <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
+              <span>Torace</span>
+              <br />
+              <input type="text" name="" maxLength={3} inputMode="numeric" />
+              <span className="ml-2">cm</span>
+            </div>
+            <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
+              <span>Vita</span>
+              <br />
+              <input type="text" name="" maxLength={3} inputMode="numeric" />
+              <span className="ml-2">cm</span>
+            </div>
+            <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
+              <span>Manica</span>
+              <br />
+              <input type="text" name="" maxLength={3} inputMode="numeric" />
+              <span className="ml-2">cm</span>
+            </div>
+          </div>
+        </div>
+      );
+      break;
     default:
-      <h1>No</h1>;
+      <Loading />;
       break;
   }
 
@@ -215,7 +251,7 @@ export function ShirtConfiguration() {
         <div>
           <div>
             <div
-              className="sticky top-14 h-16 w-full bg-white flex justify-center items-center gap-4 border-bottom border-2 overflow-x-scroll"
+              className="sticky top-14 h-16 w-full bg-white flex items-center gap-x-4 px-2 border-bottom border-2 overflow-x-scroll"
               id="steps"
             >
               <button onClick={() => selection.updateStep("collar")}>
@@ -244,12 +280,16 @@ export function ShirtConfiguration() {
                 </span>
               </button>
               <button
-                disabled={selection.collar.id === 0 || selection.fabric.id === 0}
+                disabled={
+                  selection.collar.id === 0 || selection.fabric.id === 0
+                }
                 onClick={() => selection.updateStep("cuff")}
               >
                 <span
                   className={
-                    selection.step === "cuff" ? "border-b-[3px] border-b-slate-800" : ""
+                    selection.step === "cuff"
+                      ? "border-b-[3px] border-b-slate-800"
+                      : ""
                   }
                 >
                   POLSINO
@@ -265,10 +305,31 @@ export function ShirtConfiguration() {
               >
                 <span
                   className={
-                    selection.step === "sign" ? "border-b-[3px] border-b-slate-800" : ""
+                    selection.step === "sign"
+                      ? "border-b-[3px] border-b-slate-800"
+                      : ""
                   }
                 >
                   RICAMI
+                </span>
+              </button>
+              <button
+                disabled={
+                  selection.collar.id === 0 ||
+                  selection.fabric.id === 0 ||
+                  selection.cuff.id === 0 ||
+                  selection.sign.do === false
+                }
+                onClick={() => selection.updateStep("measure")}
+              >
+                <span
+                  className={
+                    selection.step === "measure"
+                      ? "border-b-[3px] border-b-slate-800"
+                      : ""
+                  }
+                >
+                  MISURE
                 </span>
               </button>
             </div>
@@ -293,8 +354,7 @@ export function CardsList({
   next?: StepNavigation;
   prev?: StepNavigation;
 }) {
-
-  const [loading, setLoading] = useAtom(loadingAtom);
+  const loading = selectionStore((store) => store.loading);
 
   let el;
 
@@ -338,8 +398,7 @@ export function StepNavigationButton({
   next?: StepNavigation;
   prev?: StepNavigation;
 }) {
-  // const [step, setStep] = useAtom(stepAtom);
-  const updateStep = selectionStore((store)=>store.updateStep);
+  const updateStep = selectionStore((store) => store.updateStep);
   return (
     <div
       className="fixed grid grid-flow-col items-center border-t px-4 border-t-neutral-300 bottom-0 w-full h-16 bg-white "
@@ -350,7 +409,6 @@ export function StepNavigationButton({
           className="bg-red-900 text-white h-3/4 w-2/5"
           style={{ width: "6rem" }}
           onClick={() => {
-            // setStep((t) => prev!);
             updateStep(prev);
           }}
         >
@@ -363,7 +421,6 @@ export function StepNavigationButton({
           style={{ width: "6rem" }}
           disabled={selector?.id === 0}
           onClick={() => {
-            // setStep((t) => next!);
             updateStep(next);
           }}
         >
