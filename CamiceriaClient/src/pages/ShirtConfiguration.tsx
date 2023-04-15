@@ -15,33 +15,6 @@ import {
 import Loading from "../components/Loading";
 import { create } from "zustand";
 
-// //Gestione degli step per rendering delle categorie
-// export const stepAtom = atom<string>("collar");
-
-// //Selettore colletto
-// export const collarSelectionAtom = atom<Collar>({
-//   id: 0,
-//   name: "",
-//   buttons: 1,
-// });
-// //Selettore tessuto
-// export const fabricSelectionAtom = atom<Fabric>({
-//   id: 0,
-//   name: "",
-// });
-
-// //Selettore polsino
-// export const cuffSelectionAtom = atom<Cuff>({
-//   id: 0,
-//   name: "",
-// });
-// //Selettore ricami
-// export const signSelectionAtom = atom<Sign>({
-//   do: false,
-//   text: "",
-//   font: "italic",
-// });
-
 export const loadingAtom = atom<Boolean>(true);
 
 type SelectionActions = {
@@ -49,45 +22,38 @@ type SelectionActions = {
   updateCollar: (collar: Selection["collar"]) => void;
   updateFabric: (fabric: Selection["fabric"]) => void;
   updateCuff: (cuff: Selection["cuff"]) => void;
-  updateSign: (sign: Partial<Selection["sign"]>) => void;
+  updateSign: (sign: Partial<Sign>) => void;
+
 };
-
-// const initialSelection: (Selection & SelectionActions) = {
-
-// }
 
 export const selectionStore = create<Selection & SelectionActions>((set) => ({
   step: "collar",
-  updateStep: (step) => set(()=>({step:step})),
+  updateStep: (step) => set(()=>({step: step})),
   collar: {
     id: 0,
     name: "",
     buttons: 1,
   },
-  updateCollar: (collar) => set(()=>({...collar,collar})),
+  updateCollar: (collar) => set(()=>({collar: collar})),
   fabric: {
     id: 0,
     name: "",
   },
-  updateFabric: (fabric) => set(()=>({...fabric,fabric})),
+  updateFabric: (fabric) => set(()=>({fabric: fabric})),
   cuff: {
     id: 0,
     name: "",
   },
-  updateCuff: (cuff) => set(()=>({...cuff,cuff})),
+  updateCuff: (cuff) => set(()=>({cuff: cuff})),
   sign: {
     do: false,
     text: "",
   },
-  updateSign: (sign) => set(()=>({...sign,sign})),
+  updateSign: (signo) => set((state)=> ({sign: {...state.sign, ...signo}})),
+ 
 }));
 
 export function ShirtConfiguration() {
-  // const [step, setStep] = useAtom(stepAtom);
-  // const [collarSelection, setCollarSelection] = useAtom(collarSelectionAtom);
-  // const [fabricSelection, setFabricSelection] = useAtom(fabricSelectionAtom);
-  // const [cuffSelection, setCuffSelection] = useAtom(cuffSelectionAtom);
-  // const [signSelection, setSignSelection] = useAtom(signSelectionAtom);
 
   const [loading, setLoading] = useAtom(loadingAtom);
   const [collars, setCollars] = useState<Collar[]>([]);
@@ -95,6 +61,8 @@ export function ShirtConfiguration() {
   const [cuffs, setCuffs] = useState<Cuff[]>([]);
 
   const selection = selectionStore();
+  const updateSign = selectionStore((state)=> state.updateSign);
+  
 
   const getData = async (
     api: string,
@@ -121,7 +89,7 @@ export function ShirtConfiguration() {
   useEffect(() => {
     getData("/api/v1/collars", setCollars);
     getData("/api/v1/fabrics", setFabrics);
-    getData("/api/v1/cuffs", setCuffs);
+    getData("/api/v1/cuffs", setCuffs);    
   }, []);
 
   let el;
@@ -174,10 +142,7 @@ export function ShirtConfiguration() {
                 checked={selection.sign.do}
                 id="signradio"
                 onChange={() =>
-                  selection.updateSign({do:
-                      document
-                        .querySelector('input[name="sign"]:checked')
-                        ?.getAttribute("value") === "true",}
+                  updateSign({do:true}
                   )
                 }
               />
@@ -189,7 +154,7 @@ export function ShirtConfiguration() {
                 className="d-inline"
                 disabled={!selection.sign.do}
                 onChange={(e) =>
-                  selection.updateSign({text: e.target.value})
+                  updateSign({text: e.target.value})
                 }
               />
               <br />
@@ -201,7 +166,7 @@ export function ShirtConfiguration() {
                     value="italic"
                     defaultChecked
                     onChange={() =>
-                      selection.updateSign({font: "italic",
+                      updateSign({font: "italic",
                       })
                     }
                   />
@@ -211,7 +176,7 @@ export function ShirtConfiguration() {
                     name="signfont"
                     value="capitalized"
                     onChange={() =>
-                      selection.updateSign({
+                      updateSign({
                         font: "capitalized",
                       })
                     }
@@ -225,13 +190,10 @@ export function ShirtConfiguration() {
                 type="radio"
                 name="sign"
                 value="false"
-                defaultChecked
+                
                 onChange={() =>
-                  selection.updateSign({
-                    do:
-                      document
-                        .querySelector('input[name="sign"]:checked')
-                        ?.getAttribute("value") === "true",
+                  updateSign({
+                    do:false
                   })
                 }
               />
@@ -313,31 +275,6 @@ export function ShirtConfiguration() {
             {el}
           </div>
         </div>
-        {/* <div className="col pt-5 p-3">
-          <div style={{ height: "42rem" }} className="border overflow-auto">
-            La mia camicia
-            {collarSelection.id === 0 ? null : (
-              <CollarCard key={collarSelection.id} collar={collarSelection} />
-            )}
-            {fabricSelection.id === 0 ? null : (
-              <FabricCard key={fabricSelection.id} fabric={fabricSelection} />
-            )}
-            {cuffSelection.id === 0 ? null : (
-              <CuffCard key={cuffSelection.id} cuff={cuffSelection} />
-            )}
-            {signSelection.do ? (
-              <>
-                <h5>Ricamo:</h5>
-                <p>
-                  {signSelection.text} -{" "}
-                  {signSelection.font === "italic"
-                    ? "(corsivo)"
-                    : "(stampatello)"}
-                </p>
-              </>
-            ) : null}
-          </div>
-        </div> */}
       </div>
     </div>
   );
@@ -356,7 +293,7 @@ export function CardsList({
   next?: StepNavigation;
   prev?: StepNavigation;
 }) {
-  // const [step, setStep] = useAtom(stepAtom);
+
   const [loading, setLoading] = useAtom(loadingAtom);
 
   let el;
