@@ -11,6 +11,7 @@ import {
   StepNavigation,
   Sign,
   Selection,
+  Measure,
 } from "../interfaces/interfaces";
 import Loading from "../components/Loading";
 import { create } from "zustand";
@@ -22,6 +23,7 @@ type SelectionActions = {
   updateCuff: (cuff: Selection["cuff"]) => void;
   updateSign: (sign: Partial<Sign>) => void;
   updateLoading: (loading: boolean) => void;
+  updateMeasure: (measure: Partial<Measure>) => void;
 };
 
 export const selectionStore = create<Selection & SelectionActions>((set) => ({
@@ -58,6 +60,8 @@ export const selectionStore = create<Selection & SelectionActions>((set) => ({
     hips: 0,
     sleeve: 0,
   },
+  updateMeasure: (measure) =>
+    set((state) => ({ measure: { ...state.measure, ...measure } })),
 }));
 
 export function ShirtConfiguration() {
@@ -69,6 +73,8 @@ export function ShirtConfiguration() {
 
   const selection = selectionStore();
   const updateSign = selectionStore((state) => state.updateSign);
+  const updateMeasure = selectionStore((store) => store.updateMeasure);
+  const meas = selectionStore((store) => store.measure);
 
   const getData = async (
     api: string,
@@ -137,7 +143,7 @@ export function ShirtConfiguration() {
         <>
           <div className="p-5">
             <div className="text-center pb-5">
-              <img src={iniziali} style={{ width: "35rem" }} alt="" />
+              <img src={iniziali} className="w-[35rem]" alt="" />
             </div>
             <h5>Rendi unica la tua camicia, fai ricamare le tue iniziali!</h5>
             <form>
@@ -157,6 +163,7 @@ export function ShirtConfiguration() {
                 className="d-inline"
                 disabled={!selection.sign.do}
                 onChange={(e) => updateSign({ text: e.target.value })}
+                onClick={() => updateSign({ do: true })}
               />
               <br />
               {selection.sign.do ? (
@@ -197,47 +204,105 @@ export function ShirtConfiguration() {
               No, grazie
             </form>
           </div>
-          <StepNavigationButton prev="cuff"></StepNavigationButton>
+          <StepNavigationButton
+            prev="cuff"
+            next="measure"
+            selector={selection.sign.do === true}
+          ></StepNavigationButton>
         </>
       );
       break;
     case "measure":
       el = (
-        <div id="measurebox">
-          <img src={misure} />
-          <div className="grid grid-cols-2 px-4 gap-4 text-black">
-            <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
-              <span>Collo</span>
-              <br />
-              <input type="text" name="" maxLength={3} inputMode="numeric" />
-              <span className="ml-2">cm</span>
-            </div>
-            <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
-              <span>Spalle</span>
-              <br />
-              <input type="text" name="" maxLength={3} inputMode="numeric" />
-              <span className="ml-2">cm</span>
-            </div>
-            <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
-              <span>Torace</span>
-              <br />
-              <input type="text" name="" maxLength={3} inputMode="numeric" />
-              <span className="ml-2">cm</span>
-            </div>
-            <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
-              <span>Vita</span>
-              <br />
-              <input type="text" name="" maxLength={3} inputMode="numeric" />
-              <span className="ml-2">cm</span>
-            </div>
-            <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
-              <span>Manica</span>
-              <br />
-              <input type="text" name="" maxLength={3} inputMode="numeric" />
-              <span className="ml-2">cm</span>
+        <>
+          <div id="measurebox">
+            <img src={misure} />
+            <div className="grid grid-cols-2 px-4 gap-4 text-black">
+              <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
+                <span>Collo</span>
+                <br />
+                <input
+                  type="text"
+                  name="neck"
+                  maxLength={3}
+                  inputMode="numeric"
+                  onBlur={(e) =>
+                    updateMeasure({ neck: Number(e.target.value) })
+                  }
+                />
+                <span className="ml-2">cm</span>
+              </div>
+              <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
+                <span>Spalle</span>
+                <br />
+                <input
+                  type="text"
+                  name=""
+                  maxLength={3}
+                  inputMode="numeric"
+                  onBlur={(e) =>
+                    updateMeasure({ shoulder: Number(e.target.value) })
+                  }
+                />
+                <span className="ml-2">cm</span>
+              </div>
+              <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
+                <span>Torace</span>
+                <br />
+                <input
+                  type="text"
+                  name=""
+                  maxLength={3}
+                  inputMode="numeric"
+                  onBlur={(e) =>
+                    updateMeasure({ chest: Number(e.target.value) })
+                  }
+                />
+                <span className="ml-2">cm</span>
+              </div>
+              <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
+                <span>Vita</span>
+                <br />
+                <input
+                  type="text"
+                  name=""
+                  maxLength={3}
+                  inputMode="numeric"
+                  onBlur={(e) =>
+                    updateMeasure({ hips: Number(e.target.value) })
+                  }
+                />
+                <span className="ml-2">cm</span>
+              </div>
+              <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
+                <span>Manica</span>
+                <br />
+                <input
+                  type="text"
+                  name=""
+                  maxLength={3}
+                  inputMode="numeric"
+                  onBlur={(e) =>
+                    updateMeasure({ sleeve: Number(e.target.value) })
+                  }
+                />
+                <span className="ml-2">cm</span>
+              </div>
             </div>
           </div>
-        </div>
+          <StepNavigationButton
+            prev="sign"
+            next="sign"
+            selector={
+              meas.chest *
+                meas.hips *
+                meas.neck *
+                meas.shoulder *
+                meas.sleeve ===
+              0
+            }
+          ></StepNavigationButton>
+        </>
       );
       break;
     default:
@@ -381,7 +446,7 @@ export function CardsList({
     <div>
       {el}
       <StepNavigationButton
-        selector={selector}
+        selector={selector.id === 0}
         prev={prev}
         next={next}
       ></StepNavigationButton>
@@ -394,39 +459,42 @@ export function StepNavigationButton({
   next,
   prev,
 }: {
-  selector?: Collar | Fabric | Cuff;
+  selector?: boolean;
   next?: StepNavigation;
   prev?: StepNavigation;
 }) {
   const updateStep = selectionStore((store) => store.updateStep);
   return (
-    <div
-      className="fixed grid grid-flow-col items-center border-t px-4 border-t-neutral-300 bottom-0 w-full h-16 bg-white "
-      id="buttons"
-    >
-      {typeof prev !== "undefined" ? (
-        <button
-          className="bg-red-900 text-white h-3/4 w-2/5"
-          style={{ width: "6rem" }}
-          onClick={() => {
-            updateStep(prev);
-          }}
-        >
-          Indietro
-        </button>
-      ) : null}
-      {typeof next !== "undefined" ? (
-        <button
-          className="bg-slate-900 text-white h-3/4 w-2/5 justify-self-end"
-          style={{ width: "6rem" }}
-          disabled={selector?.id === 0}
-          onClick={() => {
-            updateStep(next);
-          }}
-        >
-          Avanti
-        </button>
-      ) : null}
-    </div>
+    <>
+      <div className="h-16"></div>
+      <div
+        className="fixed grid grid-flow-col items-center border-t px-4 border-t-neutral-300 bottom-0 w-full h-16 bg-white "
+        id="buttons"
+      >
+        {typeof prev !== "undefined" ? (
+          <button
+            className="bg-red-900 text-white h-3/4 w-2/5"
+            style={{ width: "6rem" }}
+            onClick={() => {
+              updateStep(prev);
+            }}
+          >
+            Indietro
+          </button>
+        ) : null}
+        {typeof next !== "undefined" ? (
+          <button
+            className="bg-slate-900 text-white h-3/4 w-2/5 justify-self-end"
+            style={{ width: "6rem" }}
+            disabled={selector}
+            onClick={() => {
+              updateStep(next);
+            }}
+          >
+            Avanti
+          </button>
+        ) : null}
+      </div>
+    </>
   );
 }
