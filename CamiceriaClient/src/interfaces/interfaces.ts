@@ -16,7 +16,7 @@ export interface Cuff {
 }
 
 export interface Sign {
-  do: boolean;
+  do: boolean | "unselected";
   text: string;
   font?: "italic" | "capitalized";
 }
@@ -29,7 +29,7 @@ export interface Measure {
   sleeve: number
 }
 
-export type StepNavigation = "collar" | "fabric" | "cuff" | "sign" | "measure";
+export type StepNavigation = "collar" | "fabric" | "cuff" | "sign" | "measure" | "summary";
 
 export interface Selection {
   loading: boolean;

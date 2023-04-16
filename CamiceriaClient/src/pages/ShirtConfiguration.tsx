@@ -1,6 +1,5 @@
 import React, { useEffect, useReducer, useState } from "react";
-import iniziali from "../assets/images/sign.webp";
-import misure from "../assets/images/Misure.png";
+
 import { CollarCard } from "../components/Card";
 import { FabricCard } from "../components/Card";
 import { CuffCard } from "../components/Card";
@@ -15,7 +14,9 @@ import {
 } from "../interfaces/interfaces";
 import Loading from "../components/Loading";
 import { create } from "zustand";
-import Summary from "../components/Summary";
+import { useNavigate } from "react-router-dom";
+import SignForm from "../components/SignForm";
+import MeasureForm from "../components/MeasureForm";
 
 type SelectionActions = {
   updateStep: (step: Selection["step"]) => void;
@@ -30,7 +31,7 @@ type SelectionActions = {
 export const selectionStore = create<Selection & SelectionActions>((set) => ({
   loading: true,
   updateLoading: (loading) => set(() => ({ loading: loading })),
-  step: "summary",
+  step: "collar",
   updateStep: (step) => set(() => ({ step: step })),
   collar: {
     id: 0,
@@ -49,11 +50,11 @@ export const selectionStore = create<Selection & SelectionActions>((set) => ({
   },
   updateCuff: (cuff) => set(() => ({ cuff: cuff })),
   sign: {
-    do: false,
+    do: "unselected",
     text: "",
+    font: "italic"
   },
-  updateSign: (signo) =>
-    set((state) => ({ sign: { ...state.sign, ...signo } })),
+  updateSign: (sign) => set((state) => ({ sign: { ...state.sign, ...sign } })),
   measure: {
     neck: 0,
     shoulder: 0,
@@ -73,9 +74,8 @@ export function ShirtConfiguration() {
   const [cuffs, setCuffs] = useState<Cuff[]>([]);
 
   const selection = selectionStore();
-  const updateSign = selectionStore((state) => state.updateSign);
   const updateMeasure = selectionStore((store) => store.updateMeasure);
-  const meas = selectionStore((store) => store.measure);
+  const measure = selectionStore((store) => store.measure);
 
   const getData = async (
     api: string,
@@ -140,174 +140,10 @@ export function ShirtConfiguration() {
       );
       break;
     case "sign":
-      el = (
-        <>
-          <div className="p-5">
-            <div className="text-center pb-5">
-              <img src={iniziali} className="w-[35rem]" alt="" />
-            </div>
-            <h5>Rendi unica la tua camicia, fai ricamare le tue iniziali!</h5>
-            <form>
-              <input
-                type="radio"
-                name="sign"
-                value="true"
-                checked={selection.sign.do}
-                id="signradio"
-                onChange={() => updateSign({ do: true })}
-              />
-              <input
-                type="text"
-                maxLength={4}
-                minLength={1}
-                style={{ width: "10rem" }}
-                className="d-inline"
-                disabled={!selection.sign.do}
-                onChange={(e) => updateSign({ text: e.target.value })}
-                onClick={() => updateSign({ do: true })}
-              />
-              <br />
-              {selection.sign.do ? (
-                <>
-                  <input
-                    type="radio"
-                    name="signfont"
-                    value="italic"
-                    defaultChecked
-                    onChange={() => updateSign({ font: "italic" })}
-                  />
-                  Corsivo
-                  <input
-                    type="radio"
-                    name="signfont"
-                    value="capitalized"
-                    onChange={() =>
-                      updateSign({
-                        font: "capitalized",
-                      })
-                    }
-                  />
-                  Stampatello
-                </>
-              ) : null}
-              <br />
-              <br />
-              <input
-                type="radio"
-                name="sign"
-                value="false"
-                onChange={() =>
-                  updateSign({
-                    do: false,
-                  })
-                }
-              />
-              No, grazie
-            </form>
-          </div>
-          <StepNavigationButton
-            prev="cuff"
-            next="measure"
-            selector={selection.sign.do === true}
-          ></StepNavigationButton>
-        </>
-      );
+      el = <SignForm />;
       break;
     case "measure":
-      el = (
-        <>
-          <div id="measurebox">
-            <img src={misure} />
-            <div className="grid grid-cols-2 px-4 gap-4 text-black">
-              <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
-                <span>Collo</span>
-                <br />
-                <input
-                  type="text"
-                  name="neck"
-                  maxLength={3}
-                  inputMode="numeric"
-                  onBlur={(e) =>
-                    updateMeasure({ neck: Number(e.target.value) })
-                  }
-                />
-                <span className="ml-2">cm</span>
-              </div>
-              <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
-                <span>Spalle</span>
-                <br />
-                <input
-                  type="text"
-                  name=""
-                  maxLength={3}
-                  inputMode="numeric"
-                  onBlur={(e) =>
-                    updateMeasure({ shoulder: Number(e.target.value) })
-                  }
-                />
-                <span className="ml-2">cm</span>
-              </div>
-              <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
-                <span>Torace</span>
-                <br />
-                <input
-                  type="text"
-                  name=""
-                  maxLength={3}
-                  inputMode="numeric"
-                  onBlur={(e) =>
-                    updateMeasure({ chest: Number(e.target.value) })
-                  }
-                />
-                <span className="ml-2">cm</span>
-              </div>
-              <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
-                <span>Vita</span>
-                <br />
-                <input
-                  type="text"
-                  name=""
-                  maxLength={3}
-                  inputMode="numeric"
-                  onBlur={(e) =>
-                    updateMeasure({ hips: Number(e.target.value) })
-                  }
-                />
-                <span className="ml-2">cm</span>
-              </div>
-              <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
-                <span>Manica</span>
-                <br />
-                <input
-                  type="text"
-                  name=""
-                  maxLength={3}
-                  inputMode="numeric"
-                  onBlur={(e) =>
-                    updateMeasure({ sleeve: Number(e.target.value) })
-                  }
-                />
-                <span className="ml-2">cm</span>
-              </div>
-            </div>
-          </div>
-          <StepNavigationButton
-            prev="sign"
-            next="summary"
-            selector={
-              meas.chest *
-                meas.hips *
-                meas.neck *
-                meas.shoulder *
-                meas.sleeve ===
-              0
-            }
-          ></StepNavigationButton>
-        </>
-      );
-      break;
-    case "summary":
-      el =(<Summary/>);
+      el = <MeasureForm/>;
       break;
     default:
       <Loading />;
@@ -468,6 +304,7 @@ export function StepNavigationButton({
   prev?: StepNavigation;
 }) {
   const updateStep = selectionStore((store) => store.updateStep);
+  const navigate = useNavigate();
   return (
     <>
       <div className="h-16"></div>
@@ -486,7 +323,7 @@ export function StepNavigationButton({
             Indietro
           </button>
         ) : null}
-        {typeof next !== "undefined" ? (
+        {typeof next !== "undefined" && next !== "summary" ? (
           <button
             className="bg-slate-900 text-white h-3/4 w-2/5 justify-self-end"
             style={{ width: "6rem" }}
@@ -496,6 +333,16 @@ export function StepNavigationButton({
             }}
           >
             Avanti
+          </button>
+        ) : null}
+        {next === "summary" ? (
+          <button
+            className="bg-green-900 text-white h-3/4 w-2/5 justify-self-end"
+            style={{ width: "6rem" }}
+            disabled={selector}
+            onClick={() => navigate("/riepilogo")}
+          >
+            Riepilogo
           </button>
         ) : null}
       </div>

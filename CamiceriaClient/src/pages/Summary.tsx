@@ -1,9 +1,7 @@
 import colletto from "../assets/images/collar.webp";
 import tessuto from "../assets/images/fabric.webp";
 import polsino from "../assets/images/cuff.webp";
-import { selectionStore } from "../pages/ShirtConfiguration";
-import { CollarCard } from "./Card";
-import { render } from "react-dom";
+import { selectionStore } from "./ShirtConfiguration";
 
 export default function Summary() {
   const collar = selectionStore((store) => store.collar);
@@ -22,6 +20,7 @@ export default function Summary() {
           <img className="w-24" src={colletto} alt="" />
           <div>
             <span>{collar.name}</span>
+            <br />
             <span>
               {collar.buttons} {collar.buttons === 1 ? "bottone" : "bottoni"}
             </span>
