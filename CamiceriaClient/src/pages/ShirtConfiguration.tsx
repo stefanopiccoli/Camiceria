@@ -15,6 +15,7 @@ import {
 } from "../interfaces/interfaces";
 import Loading from "../components/Loading";
 import { create } from "zustand";
+import Summary from "../components/Summary";
 
 type SelectionActions = {
   updateStep: (step: Selection["step"]) => void;
@@ -29,7 +30,7 @@ type SelectionActions = {
 export const selectionStore = create<Selection & SelectionActions>((set) => ({
   loading: true,
   updateLoading: (loading) => set(() => ({ loading: loading })),
-  step: "measure",
+  step: "summary",
   updateStep: (step) => set(() => ({ step: step })),
   collar: {
     id: 0,
@@ -292,7 +293,7 @@ export function ShirtConfiguration() {
           </div>
           <StepNavigationButton
             prev="sign"
-            next="sign"
+            next="summary"
             selector={
               meas.chest *
                 meas.hips *
@@ -304,6 +305,9 @@ export function ShirtConfiguration() {
           ></StepNavigationButton>
         </>
       );
+      break;
+    case "summary":
+      el =(<Summary/>);
       break;
     default:
       <Loading />;

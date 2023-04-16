@@ -5,7 +5,7 @@ import { ShirtConfiguration } from "./pages/ShirtConfiguration";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import './index.css'
-import Summary from "./pages/Summary";
+import Summary from "./components/Summary";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <BrowserRouter>
