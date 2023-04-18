@@ -41,6 +41,22 @@ export interface Selection {
   measure: Measure;
 }
 
+export interface Cart {
+  article : (CustomShirt | Shirt) [],
+}
+
+export interface CustomShirt{
+    collar:Collar,
+    fabric:Fabric,
+    cuff:Cuff,
+    sign:Sign,
+    measure:Measure
+}
+
+export interface Shirt{
+  price:number
+}
+
 export const collett: Collar[] = [
   { id: 1, name: "Button down Rubino", buttons: 1 },
   { id: 2, name: "Button down Rubino", buttons: 2 },

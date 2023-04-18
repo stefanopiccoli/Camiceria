@@ -52,7 +52,6 @@ export const selectionStore = create<Selection & SelectionActions>((set) => ({
   sign: {
     do: "unselected",
     text: "",
-    font: "italic"
   },
   updateSign: (sign) => set((state) => ({ sign: { ...state.sign, ...sign } })),
   measure: {
