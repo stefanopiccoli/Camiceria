@@ -35,12 +35,20 @@ mongoose.connect(MONGO_URL);
 mongoose.connection.on('error', (error : Error)=> console.log(error));
 
 
-app.get('/api/v2/collars', async (req,res)=>{
+app.get('/api/v2/collar', async (req,res)=>{
     const collars = await Collar.find();
     res.status(200).send(collars);
 });
-
-app.post('/api/v2/collaradd', async (req,res)=>{
-    await Cuff.create(cuff);
-    res.status(200);
+app.get('/api/v2/fabric', async (req,res)=>{
+    const collars = await Fabric.find();
+    res.status(200).send(collars);
 });
+app.get('/api/v2/cuff', async (req,res)=>{
+    const collars = await Cuff.find();
+    res.status(200).send(collars);
+});
+
+// app.post('/api/v2/collaradd', async (req,res)=>{
+//     await Fabric.create(fabric);
+//     res.status(200);
+// });

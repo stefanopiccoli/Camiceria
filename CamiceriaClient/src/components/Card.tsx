@@ -5,22 +5,15 @@ import { selectionStore } from "../pages/ShirtConfiguration";
 import {Collar, Cuff, Fabric } from '../interfaces/interfaces';
 
 export function CollarCard({ collar }: { collar: Collar }) {
-  // const [collarSelection, setCollarSelection] = useAtom(collarSelectionAtom);
   const selection = selectionStore();
   const handleClick = () => {
-    // setCollarSelection((c) => {
-    //   return { ...c, ...collar };
-    // });
     selection.updateCollar(collar);
-    
-    
-
   };
   return (
     <div
       className={
         "h-60 " +
-        (collar.id === selection.collar.id
+        (collar._id === selection.collar._id
           ? "border-4 border-slate-700"
           : "border")
       }
@@ -36,19 +29,15 @@ export function CollarCard({ collar }: { collar: Collar }) {
 }
 
 export function FabricCard({ fabric }: { fabric: Fabric }) {
-  // const [fabricSelection, setFabricSelection] = useAtom(fabricSelectionAtom);
   const selection = selectionStore();
   const handleClick = () => {
-    // setFabricSelection((c) => {
-    //   return { ...c, ...fabric };
-    // });
     selection.updateFabric(fabric);
   };
   return (
     <div
       className={
         "h-60 " +
-        (fabric.id === selection.fabric.id
+        (fabric._id === selection.fabric._id
           ? "border-4 border-slate-700"
           : "border")
       }
@@ -63,19 +52,15 @@ export function FabricCard({ fabric }: { fabric: Fabric }) {
 }
 
 export function CuffCard({ cuff }: { cuff: Cuff }) {
-  // const [cuffSelection, setCuffSelection] = useAtom(cuffSelectionAtom);
   const selection = selectionStore();
   const handleClick = () => {
-    // setCuffSelection((c) => {
-    //   return { ...c, ...cuff };
-    // });
     selection.updateCuff(cuff);
   };
   return (
     <div
       className={
         "h-60 " +
-        (cuff.id === selection.cuff.id
+        (cuff._id === selection.cuff._id
           ? "border-4 border-slate-700"
           : "border")
       }

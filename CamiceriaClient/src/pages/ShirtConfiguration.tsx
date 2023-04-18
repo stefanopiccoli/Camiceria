@@ -34,18 +34,18 @@ export const selectionStore = create<Selection & SelectionActions>((set) => ({
   step: "collar",
   updateStep: (step) => set(() => ({ step: step })),
   collar: {
-    id: 0,
+    _id: "0",
     name: "",
     buttons: 1,
   },
   updateCollar: (collar) => set(() => ({ collar: collar })),
   fabric: {
-    id: 0,
+    _id: "0",
     name: "",
   },
   updateFabric: (fabric) => set(() => ({ fabric: fabric })),
   cuff: {
-    id: 0,
+    _id: "0",
     name: "",
   },
   updateCuff: (cuff) => set(() => ({ cuff: cuff })),
@@ -76,6 +76,9 @@ export function ShirtConfiguration() {
   const updateMeasure = selectionStore((store) => store.updateMeasure);
   const measure = selectionStore((store) => store.measure);
 
+  console.log(collars);
+  
+
   const getData = async (
     api: string,
     setter: React.Dispatch<React.SetStateAction<Collar[] | Fabric[] | Cuff[]>>
@@ -99,9 +102,9 @@ export function ShirtConfiguration() {
   };
 
   useEffect(() => {
-    getData("/api/v1/collars", setCollars);
-    getData("/api/v1/fabrics", setFabrics);
-    getData("/api/v1/cuffs", setCuffs);
+    getData("/api/v2/collar", setCollars);
+    getData("/api/v2/fabric", setFabrics);
+    getData("/api/v2/cuff", setCuffs);
   }, []);
 
   let el;
@@ -170,7 +173,7 @@ export function ShirtConfiguration() {
                 </span>
               </button>
               <button
-                disabled={selection.collar.id === 0}
+                disabled={selection.collar._id === "0"}
                 onClick={() => selection.updateStep("fabric")}
               >
                 <span
@@ -185,7 +188,7 @@ export function ShirtConfiguration() {
               </button>
               <button
                 disabled={
-                  selection.collar.id === 0 || selection.fabric.id === 0
+                  selection.collar._id === "0" || selection.fabric._id === "0"
                 }
                 onClick={() => selection.updateStep("cuff")}
               >
@@ -201,9 +204,9 @@ export function ShirtConfiguration() {
               </button>
               <button
                 disabled={
-                  selection.collar.id === 0 ||
-                  selection.fabric.id === 0 ||
-                  selection.cuff.id === 0
+                  selection.collar._id === "0" ||
+                  selection.fabric._id === "0" ||
+                  selection.cuff._id === "0"
                 }
                 onClick={() => selection.updateStep("sign")}
               >
@@ -219,9 +222,9 @@ export function ShirtConfiguration() {
               </button>
               <button
                 disabled={
-                  selection.collar.id === 0 ||
-                  selection.fabric.id === 0 ||
-                  selection.cuff.id === 0 ||
+                  selection.collar._id === "0" ||
+                  selection.fabric._id === "0" ||
+                  selection.cuff._id === "0" ||
                   selection.sign.do === false
                 }
                 onClick={() => selection.updateStep("measure")}
@@ -270,12 +273,12 @@ export function CardsList({
         {list.map((item, index) => (
           <div key={index} className="col m-2">
             {type === "collar" ? (
-              <CollarCard key={item.id} collar={item} />
+              <CollarCard key={item._id} collar={item} />
             ) : null}
             {type === "fabric" ? (
-              <FabricCard key={item.id} fabric={item} />
+              <FabricCard key={item._id} fabric={item} />
             ) : null}
-            {type === "cuff" ? <CuffCard key={item.id} cuff={item} /> : null}
+            {type === "cuff" ? <CuffCard key={item._id} cuff={item} /> : null}
           </div>
         ))}
       </div>
@@ -285,7 +288,7 @@ export function CardsList({
     <div>
       {el}
       <StepNavigationButton
-        selector={selector.id === 0}
+        selector={selector._id === "0"}
         prev={prev}
         next={next}
       ></StepNavigationButton>
