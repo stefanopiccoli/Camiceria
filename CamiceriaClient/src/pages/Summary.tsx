@@ -14,12 +14,8 @@ export default function Summary() {
   const sign = selectionStore((store) => store.sign);
   const measure = selectionStore((store) => store.measure);
 
-  const cart = cartStore((store)=>store.article)
-  const addToCart = cartStore(store=>store.addCustomShirt);
-  const addToCartShirt = cartStore(store=>store.addShirt);
-
-  console.log(cart);
-  
+  const addToCartCustomShirt = cartStore((store) => store.addCustomShirt);
+  const refreshCart = cartStore(store=>store.refreshCustomShirts);
 
   return (
     <>
@@ -85,17 +81,23 @@ export default function Summary() {
           className="bg-red-900 text-white h-3/4 w-2/5"
           style={{ width: "6rem" }}
           // onClick={()=>navigate("/camicie-personalizzate")}
-          onClick={()=>addToCartShirt({price: 99})}
-
+          // onClick={()=>addToCartShirt({price: 99})}
+          onClick={()=>refreshCart()}
         >
-          Indietro
+          RefreshCart
         </button>
 
         <button
           className="bg-green-900 text-white h-3/4 w-4/5 justify-self-end"
-          onClick={()=>addToCart({collar:collar, fabric:fabric, cuff:cuff, measure:measure, sign:sign})}
+          onClick={()=>addToCartCustomShirt({
+            collar: collar,
+            fabric: fabric,
+            cuff: cuff,
+            sign: sign,
+            measure: measure
+          })}
         >
-          Conferma
+          AddToCart
         </button>
       </div>
     </>

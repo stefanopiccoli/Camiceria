@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import './index.css'
 import Summary from "./pages/Summary";
+import CartPage from "./pages/CartPage";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <BrowserRouter>
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <Route path="/ciaoo" element={<Home />} />
         <Route path="/camicie-personalizzate" element={<ShirtConfiguration />} />
         <Route path="/riepilogo" element={<Summary />} />
+        <Route path="/carrello" element={<CartPage/>} />
       </Routes>
     </BrowserRouter>
   

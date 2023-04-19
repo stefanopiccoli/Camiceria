@@ -17,10 +17,12 @@ function NavigationBar() {
           <Link to="/">
           <h1 className="text-white font-serif">Camiceria</h1>
           </Link>
+          <Link to="/carrello">
           <i
             className="fa text-2xl fa-shopping-cart text-white "
             aria-hidden="true"
           ></i>
+          </Link>
         </div>
         <div
           className={

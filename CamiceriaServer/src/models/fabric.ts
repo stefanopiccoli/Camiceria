@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const FabricSchema = new mongoose.Schema({
+export const FabricSchema = new mongoose.Schema({
     name: { type: String, required: true },
     color: { type: Array<String> }
 })

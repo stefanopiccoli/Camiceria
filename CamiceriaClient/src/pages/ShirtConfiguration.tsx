@@ -1,4 +1,7 @@
 import React, { useEffect, useReducer, useState } from "react";
+import { create } from "zustand";
+import { mountStoreDevtool } from 'simple-zustand-devtools';
+
 
 import { CollarCard } from "../components/Card";
 import { FabricCard } from "../components/Card";
@@ -13,7 +16,6 @@ import {
   Measure,
 } from "../interfaces/interfaces";
 import Loading from "../components/Loading";
-import { create } from "zustand";
 import { useNavigate } from "react-router-dom";
 import SignForm from "../components/SignForm";
 import MeasureForm from "../components/MeasureForm";
@@ -64,6 +66,9 @@ export const selectionStore = create<Selection & SelectionActions>((set) => ({
   updateMeasure: (measure) =>
     set((state) => ({ measure: { ...state.measure, ...measure } })),
 }));
+
+mountStoreDevtool('selectionStore', selectionStore);
+
 
 export function ShirtConfiguration() {
   const updateLoading = selectionStore((store) => store.updateLoading);

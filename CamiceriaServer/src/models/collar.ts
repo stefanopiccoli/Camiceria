@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const CollarSchema = new mongoose.Schema({
+export const CollarSchema = new mongoose.Schema({
     name: { type: String, required: true },
     buttons: { type: Number, required:true}
 })

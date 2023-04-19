@@ -42,7 +42,13 @@ export interface Selection {
 }
 
 export interface Cart {
-  article : (CustomShirt | Shirt) [],
+  loading: boolean,
+  customShirts : CustomShirt[],
+}
+
+export interface CartActions {
+  refreshCustomShirts: () => void;
+  addCustomShirt: (customShirt: CustomShirt) => void;
 }
 
 export interface CustomShirt{
