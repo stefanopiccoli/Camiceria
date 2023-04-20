@@ -107,9 +107,9 @@ export function ShirtConfiguration() {
   };
 
   useEffect(() => {
-    getData("/api/v2/collar", setCollars);
-    getData("/api/v2/fabric", setFabrics);
-    getData("/api/v2/cuff", setCuffs);
+    getData("/api/collars/get", setCollars);
+    getData("/api/fabrics/get", setFabrics);
+    getData("/api/cuffs/get", setCuffs);
   }, []);
 
   let el;

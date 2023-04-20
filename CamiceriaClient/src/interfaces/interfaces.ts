@@ -49,9 +49,11 @@ export interface Cart {
 export interface CartActions {
   refreshCustomShirts: () => void;
   addCustomShirt: (customShirt: CustomShirt) => void;
+  removeCustomShirt: (id: string) => void; 
 }
 
 export interface CustomShirt{
+    _id?: string,
     collar:Collar,
     fabric:Fabric,
     cuff:Cuff,

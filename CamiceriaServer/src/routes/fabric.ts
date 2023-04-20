@@ -1,9 +1,12 @@
 import express from 'express'
-import { Fabric } from '../models/fabric.js';
+import controller from '../controllers/Fabric'
 
-export const router = express.Router();
+const router = express.Router();
 
-router.get('/', async (req,res)=>{
-  const fabrics = await Fabric.find();
-  res.status(200).json(fabrics);
-});
+router.post('/create',controller.createFabric);
+router.get('/get/:fabricId',controller.readFabric);
+router.get('/get/',controller.readAllFabric);
+router.patch('/update/:fabricId',controller.updateFabric);
+router.delete('/delete/:fabricId',controller.deleteFabric);
+
+export = router;

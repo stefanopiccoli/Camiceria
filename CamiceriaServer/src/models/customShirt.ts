@@ -1,17 +1,32 @@
-import mongoose from "mongoose";
-import { CollarSchema } from "./collar.js";
-import { FabricSchema } from "./fabric.js";
-import { CuffSchema } from "./cuff.js";
-import { SignSchema } from "./sign.js";
-import { MeasureSchema } from "./measure.js";
+import mongoose, { Schema } from "mongoose";
+import { CollarSchema, ICollar } from "./Collar";
+import Fabric, { FabricSchema, IFabric } from "./Fabric";
+import Cuff, { CuffSchema, ICuff } from "./Cuff";
+import Sign, { ISign, SignSchema } from "./Sign";
+import Measure, { IMeasure, MeasureSchema } from "./Measure";
 
-export const CustomShirtSchema = new mongoose.Schema({
-  _id: { type: String },
-  collar: { type: CollarSchema },
-  fabric: { type: FabricSchema },
-  cuff: { type: CuffSchema },
-  sign: { type: SignSchema },
-  measure: { type: MeasureSchema },
-})
 
-export const CustomShirt = mongoose.model("CustomShirt", CustomShirtSchema);
+
+export interface ICustomShirt{
+  _id?: string,
+  collar:ICollar,
+  fabric:IFabric,
+  cuff:ICuff,
+  sign:ISign,
+  measure:IMeasure
+}
+
+export interface ICustomShirtModel extends ICustomShirt, Document {}
+
+export const CustomShirtSchema: Schema = new Schema(
+  {
+    collar: {type: CollarSchema, require:true},
+    fabric: {type: FabricSchema, require:true},
+    cuff: {type: CuffSchema, require:true},
+    sign: {type: SignSchema, require:true},
+    measure: {type: MeasureSchema, require:true}
+  },
+  { versionKey: false }
+);
+
+export default mongoose.model<ICustomShirtModel>("CustomShirt", CustomShirtSchema);

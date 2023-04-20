@@ -1,25 +1,25 @@
-export interface Collar {
-    id: string,
-    name: string,
-    buttons?: 1|2,
-}
+// export interface Collar {
+//     id: string,
+//     name: string,
+//     buttons?: 1|2,
+// }
 
-export interface Fabric {
-    id: string,
-    name: string,
-    color?: string[]
-}
+// export interface Fabric {
+//     id: string,
+//     name: string,
+//     color?: string[]
+// }
 
-export interface Cuff {
-    id: string,
-    name: string
-}
+// export interface Cuff {
+//     id: string,
+//     name: string
+// }
 
-export interface Sign {
-    do: boolean,
-    text: string,
-    font?: "italic"|"capitalized",
-}
+// export interface Sign {
+//     do: boolean,
+//     text: string,
+//     font?: "italic"|"capitalized",
+// }
 
 // export const collar: Collar[] = [
 //     { id: "1", name: "Button down Rubino", buttons: 1 },

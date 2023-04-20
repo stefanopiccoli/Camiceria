@@ -1,19 +1,24 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-export const MeasureSchema = new mongoose.Schema({
-  neck: {type: Number, require: true},
-  shoulder: {type: Number, require: true},
-  chest: {type: Number, require: true},
-  hips: {type: Number, require: true},
-  sleeve: {type: Number, require: true}
-})
-
-export const Measure = mongoose.model("Measure", MeasureSchema);
-
-export interface Measure {
+export interface IMeasure {
   neck: number,
   shoulder: number,
   chest: number,
   hips: number,
   sleeve: number
 }
+
+export interface IMeasureModel extends IMeasure, Document {}
+
+export const MeasureSchema: Schema = new Schema(
+  {
+    neck: {type: Number, require: true},
+    shoulder: {type: Number, require: true},
+    chest: {type: Number, require: true},
+    hips: {type: Number, require: true},
+    sleeve: {type: Number, require: true}
+  },
+  { versionKey: false }
+);
+
+export default mongoose.model<IMeasureModel>("Measure", MeasureSchema);

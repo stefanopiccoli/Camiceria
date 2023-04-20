@@ -1,12 +1,24 @@
-import mongoose from "mongoose";
-import { CustomShirtSchema } from "./customShirt.js";
+import mongoose, { Schema } from "mongoose";
+import { CustomShirtSchema, ICustomShirt } from "./CustomShirt";
 
-const UserSchema = new mongoose.Schema({
-  username: { type: String, required: true },
+export interface IUser {
+  _id: string;
+  username: string;
   cart: {
-    customShirts: {type:[CustomShirtSchema]}
+    customShirts: ICustomShirt[];
+  };
+}
+
+export interface IUserModel extends IUser, Document {}
+
+const UserSchema: Schema = new Schema(
+  {
+    username: { type: String, required: true },
+    cart: {
+      customShirts: { type: [CustomShirtSchema] },
+    },
   },
-});
+  { versionKey: false }
+);
 
-export const User = mongoose.model("User", UserSchema);
-
+export default mongoose.model<IUserModel>("User", UserSchema);

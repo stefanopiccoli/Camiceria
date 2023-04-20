@@ -1,9 +1,12 @@
 import express from 'express'
-import { Collar } from '../models/collar.js';
+import controller from '../controllers/Collar'
 
-export const router = express.Router();
+const router = express.Router();
 
-router.get('/', async (req,res)=>{
-  const collars = await Collar.find();
-  res.status(200).json(collars);
-});
+router.post('/create',controller.createCollar);
+router.get('/get/:collarId',controller.readCollar);
+router.get('/get/',controller.readAllCollar);
+router.patch('/update/:collarId',controller.updateCollar);
+router.delete('/delete/:collarId',controller.deleteCollar);
+
+export = router;

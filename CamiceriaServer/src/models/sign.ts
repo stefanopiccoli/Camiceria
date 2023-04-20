@@ -1,9 +1,20 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-export const SignSchema = new mongoose.Schema({
+export interface ISign {
+    do: boolean | "unselected";
+    text: string;
+    font?: "italic" | "capitalized";
+  }
+
+export interface ISignModel extends ISign, Document {}
+
+export const SignSchema: Schema = new Schema(
+  {
     do: { type: Boolean, required: true },
     text: { type: String, required:true},
     font: { type: String}
-})
+  },
+  { versionKey: false }
+);
 
-export const Sign = mongoose.model("Sign", SignSchema);
+export default mongoose.model<ISignModel>("Sign", SignSchema);

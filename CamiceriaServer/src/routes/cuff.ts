@@ -1,9 +1,12 @@
 import express from 'express'
-import { Cuff } from '../models/cuff.js';
+import controller from '../controllers/Cuff'
 
-export const router = express.Router();
+const router = express.Router();
 
-router.get('/', async (req,res)=>{
-  const cuffs = await Cuff.find();
-  res.status(200).json(cuffs);
-});
+router.post('/create',controller.createCuff);
+router.get('/get/:cuffId',controller.readCuff);
+router.get('/get/',controller.readAllCuff);
+router.patch('/update/:cuffId',controller.updateCuff);
+router.delete('/delete/:cuffId',controller.deleteCuff);
+
+export = router;

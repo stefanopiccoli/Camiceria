@@ -1,7 +1,17 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-export const CuffSchema = new mongoose.Schema({
+export interface ICuff {
+    _id: string;
+    name: string;
+  }
+
+export interface ICuffModel extends ICuff, Document {}
+
+export const CuffSchema: Schema = new Schema(
+  {
     name: { type: String, required: true },
-})
+  },
+  { versionKey: false }
+);
 
-export const Cuff = mongoose.model("Cuff", CuffSchema);
+export default mongoose.model<ICuffModel>("Cuff", CuffSchema);

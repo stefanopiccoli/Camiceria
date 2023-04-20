@@ -1,12 +1,19 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-export const CollarSchema = new mongoose.Schema({
+export interface ICollar {
+  _id: string;
+  name: string;
+  buttons?: 1 | 2;
+}
+
+export interface ICollarModel extends ICollar, Document {}
+
+export const CollarSchema: Schema = new Schema(
+  {
     name: { type: String, required: true },
-    buttons: { type: Number, required:true}
-})
+    buttons: { type: Number, required: true },
+  },
+  { versionKey: false }
+);
 
-export const Collar = mongoose.model("Collar", CollarSchema);
-
-
-
-
+export default mongoose.model<ICollarModel>("Collar", CollarSchema);

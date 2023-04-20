@@ -2,6 +2,10 @@ import { create } from "zustand";
 import { Cart, CustomShirt, Shirt, CartActions } from "../interfaces/interfaces";
 import { selectionStore } from "./ShirtConfiguration";
 import { mountStoreDevtool } from "simple-zustand-devtools";
+import { log } from "console";
+import { useEffect } from "react";
+
+
 
 /// STORE ///
 
@@ -10,7 +14,7 @@ export const cartStore = create<Cart & CartActions>((set) => ({
   customShirts: [], //Contiene tutte le camicie personalizzate del carrello
   refreshCustomShirts: async () => { //Aggiorna il carrello allo stato del database
     try {
-      const api = "/api/v2/cart/customShirt";
+      const api = "/api/users/cart/customShirts";
       const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
         method: "GET",
         headers: {
@@ -28,9 +32,9 @@ export const cartStore = create<Cart & CartActions>((set) => ({
 
   addCustomShirt: async (customShirt: CustomShirt) => { //Aggiunge nel database una camicia personalizzata
     try {
-      const api = "/api/v2/addCustomShirtToCart";
+      const api = "/api/users/addToCart";
       const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
-        method: "POST",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -49,6 +53,21 @@ export const cartStore = create<Cart & CartActions>((set) => ({
       console.log(error);
     }
   },
+  removeCustomShirt: async (id: string) =>{
+    try {
+      const api = "/api/users/cart/remove/"+id;
+      const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`,{
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      })
+      console.log(response);      
+    } catch (error) {
+      console.log(error);      
+    }
+
+  }
 }));
 
 mountStoreDevtool("cartStore", cartStore);
@@ -57,10 +76,15 @@ mountStoreDevtool("cartStore", cartStore);
 
 export default function CartPage() {
   const articles = cartStore((store) => store.customShirts);
-  const a = [1, 2, 3];
-  console.log("art:");
-  console.log(articles);
-  console.log(a);
+  const remove = cartStore((store) => store.removeCustomShirt);
+  const refreshCart = cartStore((store)=> store.refreshCustomShirts)
+  
+  useEffect(() => {
+    refreshCart();  
+
+  }, [articles])
+  
+   
 
   return (
     <>
@@ -80,10 +104,13 @@ export default function CartPage() {
               {item.measure.shoulder}
               {item.measure.sleeve}
             </p>
-            <button>Rimuovi</button>
+            <button
+            onClick={()=>typeof item._id!== "undefined" ? remove(item._id) : null}
+            >Rimuovi</button>
           </div>
         ))}
       </div>
     </>
   );
 }
+
