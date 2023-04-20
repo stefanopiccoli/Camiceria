@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-import Collar from "../models/Collar";
+import Collar from "../models/Collar.js";
 
 const createCollar = (req: Request, res: Response, next: NextFunction) => {
   const { name } = req.body;

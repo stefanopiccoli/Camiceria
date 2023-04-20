@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-import Fabric from "../models/Fabric";
+import Fabric from "../models/Fabric.js";
 
 const createFabric = (req: Request, res: Response, next: NextFunction) => {
   const { name, color } = req.body;

@@ -1,9 +1,9 @@
 import mongoose, { Schema } from "mongoose";
-import { CollarSchema, ICollar } from "./Collar";
-import Fabric, { FabricSchema, IFabric } from "./Fabric";
-import Cuff, { CuffSchema, ICuff } from "./Cuff";
-import Sign, { ISign, SignSchema } from "./Sign";
-import Measure, { IMeasure, MeasureSchema } from "./Measure";
+import { CollarSchema, ICollar } from "./Collar.js";
+import Fabric, { FabricSchema, IFabric } from "./Fabric.js";
+import Cuff, { CuffSchema, ICuff } from "./Cuff.js";
+import Sign, { ISign, SignSchema } from "./Sign.js";
+import Measure, { IMeasure, MeasureSchema } from "./Measure.js";
 
 
 

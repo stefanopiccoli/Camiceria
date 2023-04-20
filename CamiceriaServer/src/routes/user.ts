@@ -1,5 +1,5 @@
 import express from 'express'
-import controller from '../controllers/User'
+import controller from '../controllers/User.js'
 
 const router = express.Router();
 
@@ -12,4 +12,4 @@ router.patch('/addToCart/',controller.addToCart);
 router.get('/cart/customShirts', controller.readAllCustomShirts);
 router.patch('/cart/remove/:id', controller.removeFromCart);
 
-export = router;
+export default router;

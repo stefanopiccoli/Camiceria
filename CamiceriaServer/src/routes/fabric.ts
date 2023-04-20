@@ -1,5 +1,5 @@
 import express from 'express'
-import controller from '../controllers/Fabric'
+import controller from '../controllers/Fabric.js'
 
 const router = express.Router();
 
@@ -9,4 +9,4 @@ router.get('/get/',controller.readAllFabric);
 router.patch('/update/:fabricId',controller.updateFabric);
 router.delete('/delete/:fabricId',controller.deleteFabric);
 
-export = router;
+export default router;

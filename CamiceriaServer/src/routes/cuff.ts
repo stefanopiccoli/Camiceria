@@ -1,5 +1,5 @@
 import express from 'express'
-import controller from '../controllers/Cuff'
+import controller from '../controllers/Cuff.js'
 
 const router = express.Router();
 
@@ -9,4 +9,4 @@ router.get('/get/',controller.readAllCuff);
 router.patch('/update/:cuffId',controller.updateCuff);
 router.delete('/delete/:cuffId',controller.deleteCuff);
 
-export = router;
+export default router;

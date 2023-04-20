@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { CustomShirtSchema, ICustomShirt } from "./CustomShirt";
+import { CustomShirtSchema, ICustomShirt } from "./CustomShirt.js";
 
 export interface IUser {
   _id: string;

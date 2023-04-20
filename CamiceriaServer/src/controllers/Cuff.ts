@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-import Cuff from "../models/Cuff";
+import Cuff from "../models/Cuff.js";
 
 const createCuff = (req: Request, res: Response, next: NextFunction) => {
   const { name } = req.body;
