@@ -39,16 +39,21 @@ export const selectionStore = create<Selection & SelectionActions>((set) => ({
     _id: "0",
     name: "",
     buttons: 1,
+    imageUrl:""
   },
   updateCollar: (collar) => set(() => ({ collar: collar })),
   fabric: {
     _id: "0",
     name: "",
+    imageUrl:""
+
   },
   updateFabric: (fabric) => set(() => ({ fabric: fabric })),
   cuff: {
     _id: "0",
     name: "",
+    imageUrl:""
+
   },
   updateCuff: (cuff) => set(() => ({ cuff: cuff })),
   sign: {

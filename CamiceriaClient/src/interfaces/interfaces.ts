@@ -2,17 +2,22 @@ export interface Collar {
   _id: string;
   name: string;
   buttons?: 1 | 2;
+  imageUrl:string;
 }
 
 export interface Fabric {
   _id: string;
   name: string;
   color?: string;
+  imageUrl:string;
+
 }
 
 export interface Cuff {
   _id: string;
   name: string;
+  imageUrl:string;
+
 }
 
 export interface Sign {

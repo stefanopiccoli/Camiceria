@@ -19,7 +19,7 @@ export function CollarCard({ collar }: { collar: Collar }) {
       }
       onClick={handleClick}
     >
-      <img src={colletto} />
+      <img src={collar.imageUrl} />
       <div className="p-1">
         <p>{collar.name}</p>
         <p className="text-sm italic">{collar.buttons} {collar.buttons === 2 ? "bottoni" : "bottone"}</p>

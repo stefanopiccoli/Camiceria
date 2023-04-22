@@ -1,13 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import Collar from "../models/Collar.js";
+import { upload } from "../utils/Cloudinary.js";
+import { FileArray } from "express-fileupload";
 
-const createCollar = (req: Request, res: Response, next: NextFunction) => {
-  const { name } = req.body;
-  const collar = new Collar({
-    _id: new mongoose.Types.ObjectId(),
-    name,
-  });
+const createCollar = async (req: Request, res: Response, next: NextFunction) => {
+  const { name, buttons} = req.body;
+  if (!req.files){
+    res.status(500).json({error: "File non trovato"});
+    return
+  }    
+    const {file}:FileArray = req.files;
+    console.log({name,buttons,file});
+    const {url}:any = await upload(file,"/Camiceria/collar");
+    const collar = new Collar({
+      _id: new mongoose.Types.ObjectId(),
+      name,
+      buttons,
+      imageUrl:String(url)
+    });
 
   return collar
     .save()

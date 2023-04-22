@@ -80,15 +80,14 @@ export default function Summary() {
         <button
           className="bg-red-900 text-white h-3/4 w-2/5"
           style={{ width: "6rem" }}
-          // onClick={()=>navigate("/camicie-personalizzate")}
-          // onClick={()=>addToCartShirt({price: 99})}
-          onClick={()=>refreshCart()}
+          onClick={()=>navigate("/camicie-personalizzate")}
         >
-          RefreshCart
+          Indietro
         </button>
 
         <button
-          className="bg-green-900 text-white h-3/4 w-4/5 justify-self-end"
+          className="bg-green-900 text-white h-3/4 w-2/5 justify-self-end"
+          style={{ width: "6rem" }}
           onClick={()=>addToCartCustomShirt({
             collar: collar,
             fabric: fabric,
