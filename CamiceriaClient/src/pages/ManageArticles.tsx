@@ -36,9 +36,9 @@ export function ManageCollars() {
   const handleSubmit = async () => {
     const api = "/api/collars/create";
     const formData = new FormData();
-    formData.append('name',name);
-    formData.append('buttons', buttons);
-    formData.append('file',file);
+    formData.append("name", name);
+    formData.append("buttons", buttons);
+    formData.append("file", file);
     try {
       const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
         method: "POST",
@@ -50,43 +50,58 @@ export function ManageCollars() {
     } catch (error) {
       console.log(error);
     }
-    
   };
   return (
-    <div className="p-3">
-      <h1>Inserisci un nuovo colletto</h1>
-      <form>
-        <label>Nome: </label>
-        <input
-          type="text"
-          placeholder="Inserisci il nome..."
-          name="name"
-          onChange={(e) => setName(e.target.value)}
-        />
-        <br />
-        <label>Bottoni: </label>
-        <select
-          name="buttons"
-          id=""
-          onChange={(e) => setButtons(e.target.value)}
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
-        <br />
-        <input
-          type="file"
-          name="file"
-          onChange={(e) => (e.target.files ? setFile(e.target.files[0]) : null)}
-        />
-        {/* <label>{file && `${file?.name} - ${file?.type} - ${file?.size}`}</label> */}
-        <br />
-        <div onClick={(e)=>handleSubmit()} >SUBMIT</div>
+    <>
+      <div className="h-14"></div>
+      <div className="fixed top-14 h-12 w-full bg-white px-2 border-bottom border-2 flex items-center justify-center">
+        <h1 className="text-xl">Colletti</h1>
+      </div>
+      <div className="p-3">
+        <form className="flex flex-col gap-y-4">
+          <div>
+            <label className="text-xl">Nome:</label>
+            <input
+              className="w-full h-10 px-5 border-2"
+              type="text"
+              placeholder="Inserisci il nome..."
+              name="name"
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="flex justify-between">
+            <p className="text-xl">Bottoni:</p>
 
-      </form>
-    </div>
+            <select
+              className="border-2 rounded-md w-2/3 "
+              name="buttons"
+              id=""
+              onChange={(e) => setButtons(e.target.value)}
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <div className="flex">
+            <p className="text-xl w-1/3">Foto:</p>
+
+          <input
+            type="file"
+            name="file"
+            
+            onChange={(e) =>
+              e.target.files ? setFile(e.target.files[0]) : null
+            }
+            />
+            </div>
+          {/* <label>{file && `${file?.name} - ${file?.type} - ${file?.size}`}</label> */}
+          <br />
+          <button type="button" className="bg-slate-900 text-white h-8 w-1/3 self-end" onClick={(e) => handleSubmit()}>Aggiungi</button>
+        </form>
+      </div>
+    </>
   );
 }

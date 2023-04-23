@@ -100,7 +100,7 @@ export default function CartPage() {
             <p>{item.fabric.name}</p>
             <p>{item.cuff.name}</p>
             <p>
-              {item.sign.text}({item.sign.font})
+              {item.sign.do && item.sign.text}({item.sign.do && item.sign.font})
             </p>
             <p>
               {item.measure.chest}

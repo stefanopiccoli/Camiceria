@@ -51,6 +51,9 @@ function NavigationBar() {
             <Link to="/cravatte" onClick={()=> setMenu("closed")}>
               <h3 className="text-center text-white text-2xl">Cravatte</h3>
             </Link>
+            <Link to="/gestione-articoli" onClick={()=> setMenu("closed")}>
+              <h3 className="text-center text-white text-2xl">Gestisci articoli</h3>
+            </Link>
           </div>
         </div>
       </div>
