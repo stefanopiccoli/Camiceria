@@ -1,23 +1,21 @@
 export interface Collar {
   _id: string;
   name: string;
-  buttons?: 1 | 2;
-  imageUrl:string;
+  buttons?: number;
+  imageUrl: string;
 }
 
 export interface Fabric {
   _id: string;
   name: string;
   color?: string;
-  imageUrl:string;
-
+  imageUrl: string;
 }
 
 export interface Cuff {
   _id: string;
   name: string;
-  imageUrl:string;
-
+  imageUrl: string;
 }
 
 export interface Sign {
@@ -27,14 +25,20 @@ export interface Sign {
 }
 
 export interface Measure {
-  neck: number,
-  shoulder: number,
-  chest: number,
-  hips: number,
-  sleeve: number
+  neck: number;
+  shoulder: number;
+  chest: number;
+  hips: number;
+  sleeve: number;
 }
 
-export type StepNavigation = "collar" | "fabric" | "cuff" | "sign" | "measure" | "summary";
+export type StepNavigation =
+  | "collar"
+  | "fabric"
+  | "cuff"
+  | "sign"
+  | "measure"
+  | "summary";
 
 export interface Selection {
   loading: boolean;
@@ -47,27 +51,27 @@ export interface Selection {
 }
 
 export interface Cart {
-  loading: boolean,
-  customShirts : CustomShirt[],
+  loading: boolean;
+  customShirts: CustomShirt[];
 }
 
 export interface CartActions {
   refreshCustomShirts: () => void;
   addCustomShirt: (customShirt: CustomShirt) => void;
-  removeCustomShirt: (id: string) => void; 
+  removeCustomShirt: (id: string) => void;
 }
 
-export interface CustomShirt{
-    _id?: string,
-    collar:Collar,
-    fabric:Fabric,
-    cuff:Cuff,
-    sign:Sign,
-    measure:Measure
+export interface CustomShirt {
+  _id?: string;
+  collar: Collar;
+  fabric: Fabric;
+  cuff: Cuff;
+  sign: Sign;
+  measure: Measure;
 }
 
-export interface Shirt{
-  price:number
+export interface Shirt {
+  price: number;
 }
 
 // export const collett: Collar[] = [

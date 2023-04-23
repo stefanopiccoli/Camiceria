@@ -4,21 +4,29 @@ import Collar from "../models/Collar.js";
 import { upload } from "../utils/Cloudinary.js";
 import { FileArray } from "express-fileupload";
 
-const createCollar = async (req: Request, res: Response, next: NextFunction) => {
-  const { name, buttons} = req.body;
-  if (!req.files){
-    res.status(500).json({error: "File non trovato"});
-    return
-  }    
-    const {file}:FileArray = req.files;
-    console.log({name,buttons,file});
-    const {url}:any = await upload(file,"/Camiceria/collar");
-    const collar = new Collar({
-      _id: new mongoose.Types.ObjectId(),
-      name,
-      buttons,
-      imageUrl:String(url)
-    });
+const createCollar = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { name, buttons } = req.body;
+  if (!req.files) {
+    res.status(500).json({ error: "File not found" });
+    return;
+  }
+  const { file }: FileArray = req.files;
+  console.log({ name, buttons, file });
+  const { secure_url }: any = await upload(file, "/Camiceria/collar");
+  if (!secure_url) {
+    res.status(500).json({secure_url, error: "Error generating secure url" });
+    return;
+  }
+  const collar = new Collar({
+    _id: new mongoose.Types.ObjectId(),
+    name,
+    buttons,
+    imageUrl: String(secure_url),
+  });
 
   return collar
     .save()
@@ -43,6 +51,8 @@ const readAllCollar = (req: Request, res: Response, next: NextFunction) => {
 };
 const updateCollar = (req: Request, res: Response, next: NextFunction) => {
   const collarId = req.params.collarId;
+  console.log(req.body);
+  
   return Collar.findById(collarId)
     .then((collar) => {
       if (collar) {

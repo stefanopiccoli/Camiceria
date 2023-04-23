@@ -22,7 +22,7 @@ export function CollarCard({ collar }: { collar: Collar }) {
       <img src={collar.imageUrl} />
       <div className="p-1">
         <p>{collar.name}</p>
-        <p className="text-sm italic">{collar.buttons} {collar.buttons === 2 ? "bottoni" : "bottone"}</p>
+        <p className="text-sm italic">{collar.buttons} {collar.buttons === 1 ? "bottone" : "bottoni"}</p>
       </div>
     </div>
   );

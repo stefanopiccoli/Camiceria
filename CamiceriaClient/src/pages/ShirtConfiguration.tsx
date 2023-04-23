@@ -83,10 +83,6 @@ export function ShirtConfiguration() {
   const [cuffs, setCuffs] = useState<Cuff[]>([]);
 
   const selection = selectionStore();
-  const updateMeasure = selectionStore((store) => store.updateMeasure);
-  const measure = selectionStore((store) => store.measure);
-
-  console.log(collars);
   
 
   const getData = async (

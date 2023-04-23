@@ -15,7 +15,15 @@ html{
 }
 
 input[type="text"]{
-    @apply border rounded-md text-lg;
+    @apply border-2 rounded-md text-lg;
+}
+
+input[type="number"]{
+    @apply border-2 rounded-md text-lg;
+}
+
+select{
+    @apply border-2 rounded-md text-lg;
 }
 
 #measurebox input[type="text"]{
