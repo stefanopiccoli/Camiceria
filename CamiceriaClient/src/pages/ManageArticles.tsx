@@ -2,7 +2,9 @@ import colletto from "../assets/images/collar.webp";
 import tessuto from "../assets/images/fabric.webp";
 import polsino from "../assets/images/cuff.webp";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Collar } from "../interfaces/interfaces";
+import { CollarCard } from "../components/Card";
 
 export default function ManageArticles() {
   const location = useLocation();
@@ -30,10 +32,42 @@ export default function ManageArticles() {
 }
 
 export function ManageCollars() {
+  console.log("reload");
+
+  const [loading, setLoading] = useState(true);
+  const [collars, setCollars] = useState<Collar[]>([]);
   const [name, setName] = useState("");
   const [buttons, setButtons] = useState("0");
   const [file, setFile] = useState<any>();
-  const handleSubmit = async () => {
+
+  const [update, setUpdate] = useState<Partial<Collar>>({ _id: "197848021" });
+
+  const getData = async (
+    api: string,
+    setter: React.Dispatch<React.SetStateAction<Collar[]>>
+  ) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let result = await response.json();
+      setter(result);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getData("/api/collars/get", setCollars);
+  }, []);
+
+  const handleCreate = async () => {
     const api = "/api/collars/create";
     const formData = new FormData();
     formData.append("name", name);
@@ -46,6 +80,44 @@ export function ManageCollars() {
       });
 
       let result = await response.json();
+      console.log(result);
+      getData("/api/collars/get", setCollars);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUpdate = async () => {
+    const api = "/api/collars/update/" + update._id;
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
+        method: "PATCH",
+        body: JSON.stringify(update),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let result = await response.json();
+      getData("/api/collars/get", setCollars);
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    const api = "/api/collars/delete/" + id;
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let result = await response.json();
+      getData("/api/collars/get", setCollars);
       console.log(result);
     } catch (error) {
       console.log(error);
@@ -88,19 +160,72 @@ export function ManageCollars() {
           <div className="flex">
             <p className="text-xl w-1/3">Foto:</p>
 
-          <input
-            type="file"
-            name="file"
-            
-            onChange={(e) =>
-              e.target.files ? setFile(e.target.files[0]) : null
-            }
+            <input
+              type="file"
+              name="file"
+              onChange={(e) =>
+                e.target.files ? setFile(e.target.files[0]) : null
+              }
             />
-            </div>
+          </div>
           {/* <label>{file && `${file?.name} - ${file?.type} - ${file?.size}`}</label> */}
           <br />
-          <button type="button" className="bg-slate-900 text-white h-8 w-1/3 self-end" onClick={(e) => handleSubmit()}>Aggiungi</button>
+          <button
+            type="button"
+            className="bg-slate-900 text-white h-8 w-1/3 self-end"
+            onClick={(e) => handleCreate()}
+          >
+            Aggiungi
+          </button>
         </form>
+        <div className="grid grid-cols-1 gap-2 p-3 mt-2 border-t-2">
+          {collars.map((item, index) => (
+            <div key={item._id} className="flex w-full">
+              <div className="grid place-content-center">
+                <i
+                  className="fa fa-trash text-2xl text-red-800"
+                  aria-hidden="true"
+                  onClick={()=>handleDelete(item._id)}
+                ></i>
+              </div>
+              <img src={item.imageUrl} className="w-28" alt="" />
+              <div className="flex flex-col justify-evenly">
+                <input
+                  type="text"
+                  name="name"
+                  defaultValue={item.name}
+                  onChange={(e) =>
+                    setUpdate((update) => ({
+                      ...update,
+                      _id: item._id,
+                      name: e.target.value,
+                    }))
+                  }
+                />
+                <input
+                  type="number"
+                  name="buttons"
+                  className="w-10 px-2"
+                  defaultValue={item.buttons}
+                  onChange={(e) =>
+                    setUpdate((update) => ({
+                      ...update,
+                      _id: item._id,
+                      buttons: Number(e.target.value),
+                    }))
+                  }
+                />
+                <button
+                  type="button"
+                  className="bg-slate-900 text-white h-8 w-2/5 self-end"
+                  onClick={() => handleUpdate()}
+                >
+                  Aggiorna
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );

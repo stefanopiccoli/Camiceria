@@ -18,6 +18,14 @@ input[type="text"]{
     @apply border-2 rounded-md text-lg;
 }
 
+input[type="number"]{
+    @apply border-2 rounded-md text-lg;
+}
+
+select{
+    @apply border-2 rounded-md text-lg;
+}
+
 #measurebox input[type="text"]{
     @apply w-16 border-0 border-b-2 bg-transparent border-black rounded-none text-end;
 }
