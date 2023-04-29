@@ -3,7 +3,7 @@ import tessuto from "../assets/images/fabric.webp";
 import polsino from "../assets/images/cuff.webp";
 import { selectionStore } from "./ShirtConfiguration";
 import { useNavigate } from "react-router-dom";
-import { cartStore } from "../store/Cart.js";
+import { cartStore } from "../store/Cart";
 import { userStore } from "../store/User";
 
 export default function Summary() {

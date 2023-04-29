@@ -6,9 +6,9 @@ html{
     @apply font-serif;
 }
 
-a{
+/* a{
     @apply text-indigo-900 underline underline-offset-2
-}
+} */
 
 #steps>button[disabled]{
     @apply text-neutral-500/50;

@@ -84,7 +84,7 @@ export default function Login() {
             </div>
             <p className="mt-10">
               Non hai ancora un account?{" "}
-              <Link to="/registrati">Registrati</Link>{" "}
+              <Link to="/registrati" className="underline underline-offset-1">Registrati</Link>{" "}
             </p>
           </form>
           {error !== "" ? (

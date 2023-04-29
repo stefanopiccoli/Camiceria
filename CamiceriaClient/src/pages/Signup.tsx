@@ -66,7 +66,7 @@ export default function Signup() {
         </div>
         <p className="mt-10">
           Hai già un account?
-          <Link to="/accedi">Log In</Link>
+          <Link to="/accedi" className="underline underline-offset-1">Log In</Link>
         </p>
       </form>
       {error !== "" ? (
