@@ -4,6 +4,7 @@ export interface IFabric {
   _id: string;
   name: string;
   color?: string;
+  imageUrl:string;
 }
 
 export interface IFabricModel extends IFabric, Document {}
@@ -11,7 +12,9 @@ export interface IFabricModel extends IFabric, Document {}
 export const FabricSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
-    color: {type: [String]}
+    color: {type: [String]},
+    imageUrl: { type: String, required: true}
+
   },
   { versionKey: false }
 );

@@ -3,7 +3,8 @@ import tessuto from "../assets/images/fabric.webp";
 import polsino from "../assets/images/cuff.webp";
 import { selectionStore } from "./ShirtConfiguration";
 import { useNavigate } from "react-router-dom";
-import { cartStore } from "./CartPage";
+import { cartStore } from "../store/Cart";
+import { userStore } from "../store/User";
 
 export default function Summary() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function Summary() {
   const measure = selectionStore((store) => store.measure);
 
   const addToCartCustomShirt = cartStore((store) => store.addCustomShirt);
+  const userId = userStore((store)=> store.user?.uid);
   const refreshCart = cartStore(store=>store.refreshCustomShirts);
 
   return (
@@ -88,13 +90,13 @@ export default function Summary() {
         <button
           className="bg-green-900 text-white h-3/4 w-2/5 justify-self-end"
           style={{ width: "6rem" }}
-          onClick={()=>addToCartCustomShirt({
+          onClick={()=>userId? addToCartCustomShirt({
             collar: collar,
             fabric: fabric,
             cuff: cuff,
             sign: sign,
             measure: measure
-          })}
+          },userId): null}
         >
           AddToCart
         </button>

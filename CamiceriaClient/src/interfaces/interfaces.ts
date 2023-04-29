@@ -1,3 +1,5 @@
+import { User as FirebaseUser, UserCredential } from "firebase/auth";
+
 export interface Collar {
   _id: string;
   name: string;
@@ -56,9 +58,9 @@ export interface Cart {
 }
 
 export interface CartActions {
-  refreshCustomShirts: () => void;
-  addCustomShirt: (customShirt: CustomShirt) => void;
-  removeCustomShirt: (id: string) => void;
+  refreshCustomShirts: (userId: string) => void;
+  addCustomShirt: (customShirt: CustomShirt, userId: string) => void;
+  removeCustomShirt: (id: string, userId: string) => void;
 }
 
 export interface CustomShirt {
@@ -72,6 +74,10 @@ export interface CustomShirt {
 
 export interface Shirt {
   price: number;
+}
+
+export interface User {
+  user: FirebaseUser | null
 }
 
 // export const collett: Collar[] = [

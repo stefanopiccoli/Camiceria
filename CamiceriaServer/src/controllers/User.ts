@@ -4,9 +4,9 @@ import User from "../models/User.js";
 import { error } from "console";
 
 const createUser = (req: Request, res: Response, next: NextFunction) => {
-  const { username, cart } = req.body;
+  const {_id, username, cart } = req.body;
   const user = new User({
-    _id: new mongoose.Types.ObjectId(),
+    _id,
     username,
     cart,
   });
@@ -14,7 +14,8 @@ const createUser = (req: Request, res: Response, next: NextFunction) => {
   return user
     .save()
     .then((user) => res.status(201).json({ user }))
-    .catch((error) => res.status(500).json(error));
+    .catch((error) => {res.status(500).json(error); console.log(error);
+    });
 };
 const readUser = (req: Request, res: Response, next: NextFunction) => {
   const userId = req.params.userId;
@@ -61,11 +62,10 @@ const deleteUser = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const addToCart = (req: Request, res: Response, next: NextFunction) => {
-  const article = req.body;
+  const {userId, ...article} = req.body;
   return User.findOneAndUpdate(
-    { username: "FrancescoTotti" },
+    { _id: userId },
     { $push: { "cart.customShirts": article } },
-    { upsert: true }
   )
     .then(() =>
       res.status(200).json({ message: "data updated", article: article })
@@ -78,7 +78,8 @@ const readAllCustomShirts = (
   res: Response,
   next: NextFunction
 ) => {
-  return User.findOne({ username: "FrancescoTotti" })
+  
+  return User.findOne({ _id: req.params.id })
     .then((customShirts) => res.status(200).json(customShirts))
     .catch((error) => res.status(500).json({ error }));
 };
@@ -86,11 +87,12 @@ const readAllCustomShirts = (
 const removeFromCart = (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id;
   console.log(id);
+  const {userId} = req.body;  
 
   // return User.findOne({
   //   username: "FrancescoTotti","cart.customShirts._id":id},'cart.customShirts.$')
   User.updateOne(
-    { username: "FrancescoTotti" },
+    { _id: userId },
     { $pull: { "cart.customShirts": { "_id": id } } }
   )
 

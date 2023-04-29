@@ -246,7 +246,10 @@ export function ShirtConfiguration() {
                 </span>
               </button>
             </div>
+            <div className="pt-16">
+
             {el}
+            </div>
           </div>
         </div>
       </div>
