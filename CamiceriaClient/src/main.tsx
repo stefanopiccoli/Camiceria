@@ -8,6 +8,8 @@ import "./index.css";
 import Summary from "./pages/Summary";
 import CartPage from "./pages/CartPage";
 import ManageArticles, { ManageCollars } from "./pages/ManageArticles";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <BrowserRouter>
@@ -15,6 +17,8 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="ciaoo" element={<Home />} />
+      <Route path="registrati" element={<Signup />} />
+      <Route path="accedi" element={<Login />} />
       <Route path="camicie-personalizzate" element={<ShirtConfiguration />} />
       <Route path="riepilogo" element={<Summary />} />
       <Route path="carrello" element={<CartPage />} />

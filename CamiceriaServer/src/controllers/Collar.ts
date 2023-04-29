@@ -18,7 +18,7 @@ const createCollar = async (
   console.log({ name, buttons, file });
   const { secure_url }: any = await upload(file, "/Camiceria/collar");
   if (!secure_url) {
-    res.status(500).json({secure_url, error: "Error generating secure url" });
+    res.status(500).json({ secure_url, error: "Error generating secure url" });
     return;
   }
   const collar = new Collar({
@@ -52,7 +52,7 @@ const readAllCollar = (req: Request, res: Response, next: NextFunction) => {
 const updateCollar = (req: Request, res: Response, next: NextFunction) => {
   const collarId = req.params.collarId;
   console.log(req.body);
-  
+
   return Collar.findById(collarId)
     .then((collar) => {
       if (collar) {

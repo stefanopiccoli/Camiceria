@@ -1,95 +1,20 @@
-import { create } from "zustand";
-import {
-  Cart,
-  CustomShirt,
-  Shirt,
-  CartActions,
-} from "../interfaces/interfaces";
-import { selectionStore } from "./ShirtConfiguration";
-import { mountStoreDevtool } from "simple-zustand-devtools";
-import { log } from "console";
 import { useEffect } from "react";
-
-/// STORE ///
-
-export const cartStore = create<Cart & CartActions>((set) => ({
-  loading: true,
-  customShirts: [], //Contiene tutte le camicie personalizzate del carrello
-  refreshCustomShirts: async () => {
-    //Aggiorna il carrello allo stato del database
-    try {
-      const api = "/api/users/cart/customShirts";
-      const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      let result = await response.json();
-      const { cart } = result;
-      set(() => ({ customShirts: cart.customShirts }));
-    } catch (error) {
-      console.log(error);
-    }
-  },
-
-  addCustomShirt: async (customShirt: CustomShirt) => {
-    //Aggiunge nel database una camicia personalizzata
-    try {
-      const api = "/api/users/addToCart";
-      const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          collar: customShirt.collar,
-          fabric: customShirt.fabric,
-          cuff: customShirt.cuff,
-          measure: customShirt.measure,
-          sign: customShirt.sign,
-        }),
-      });
-
-      let result = await response.json();
-      console.log(result);
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  removeCustomShirt: async (id: string) => {
-    try {
-      const api = "/api/users/cart/remove/" + id;
-      const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  },
-}));
-
-mountStoreDevtool("cartStore", cartStore);
-
-/// FINE STORE ///
+import { cartStore } from "../store/Cart";
+import { userStore } from "../store/User";
 
 export default function CartPage() {
   const articles = cartStore((store) => store.customShirts);
   const remove = cartStore((store) => store.removeCustomShirt);
   const refreshCart = cartStore((store) => store.refreshCustomShirts);
+  const userId = userStore((store) => store.user?.uid);
 
   useEffect(() => {
-    refreshCart();
+    userId? refreshCart(userId): null;
   }, [articles]);
 
   return (
     <>
-      <div className="h-11=2"></div>
+      <div className="h-14"></div>
       <div className="fixed top-14 h-12 w-full bg-white px-2 border-bottom border-2 flex items-center justify-center">
         <h1 className="text-xl">CARRELLO</h1>
       </div>
@@ -111,7 +36,7 @@ export default function CartPage() {
             </p>
             <button
               onClick={() =>
-                typeof item._id !== "undefined" ? remove(item._id) : null
+                typeof item._id !== "undefined" && userId ? remove(item._id, userId) : null
               }
             >
               Rimuovi

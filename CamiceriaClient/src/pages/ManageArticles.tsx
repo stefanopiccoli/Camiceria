@@ -5,6 +5,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Collar } from "../interfaces/interfaces";
 import { CollarCard } from "../components/Card";
+import Loading from "../components/Loading";
 
 export default function ManageArticles() {
   const location = useLocation();
@@ -37,10 +38,10 @@ export function ManageCollars() {
   const [loading, setLoading] = useState(true);
   const [collars, setCollars] = useState<Collar[]>([]);
   const [name, setName] = useState("");
-  const [buttons, setButtons] = useState("0");
+  const [buttons, setButtons] = useState("");
   const [file, setFile] = useState<any>();
 
-  const [update, setUpdate] = useState<Partial<Collar>>({ _id: "197848021" });
+  const [update, setUpdate] = useState<Partial<Collar>>({});
 
   const getData = async (
     api: string,
@@ -115,7 +116,6 @@ export function ManageCollars() {
           "Content-Type": "application/json",
         },
       });
-
       let result = await response.json();
       getData("/api/collars/get", setCollars);
       console.log(result);
@@ -168,8 +168,7 @@ export function ManageCollars() {
               }
             />
           </div>
-          {/* <label>{file && `${file?.name} - ${file?.type} - ${file?.size}`}</label> */}
-          <br />
+
           <button
             type="button"
             className="bg-slate-900 text-white h-8 w-1/3 self-end"
@@ -177,18 +176,20 @@ export function ManageCollars() {
           >
             Aggiungi
           </button>
+          <hr />
         </form>
-        <div className="grid grid-cols-1 gap-2 p-3 mt-2 border-t-2">
-          {collars.map((item, index) => (
-            <div key={item._id} className="flex w-full">
-              <div className="grid place-content-center">
+        <div className="grid grid-cols-1 gap-2 mt-2">
+          {loading ? <Loading/> :
+          collars.map((item, index) => (
+            <div key={item._id} className="flex w-full border-2 gap-2">
+              <div className="flex flex-col items-center">
+                <img src={item.imageUrl} className="w-28" alt="" />
                 <i
                   className="fa fa-trash text-2xl text-red-800"
                   aria-hidden="true"
-                  onClick={()=>handleDelete(item._id)}
+                  onClick={() => handleDelete(item._id)}
                 ></i>
               </div>
-              <img src={item.imageUrl} className="w-28" alt="" />
               <div className="flex flex-col justify-evenly">
                 <input
                   type="text"

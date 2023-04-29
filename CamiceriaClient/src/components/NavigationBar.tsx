@@ -6,7 +6,7 @@ function NavigationBar() {
   const [menu, setMenu] = useState<"open" | "closed">("closed");
   return (
     <>
-      <div className="h-14 w-full"></div> {/*Spacing sotto la navbar */}
+      {/* <div className="h-14 w-full"></div> Spacing sotto la navbar */}
       <div className="fixed top-0 bg-slate-900 h-14 w-full z-30">
         <div className="container px-6 mx-auto h-full flex justify-between items-center">
           <i

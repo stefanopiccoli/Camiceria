@@ -1,13 +1,30 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import Fabric from "../models/Fabric.js";
+import { upload } from "../utils/Cloudinary.js";
+import { FileArray } from "express-fileupload";
 
-const createFabric = (req: Request, res: Response, next: NextFunction) => {
+const createFabric = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { name, color } = req.body;
+  if (!req.files) {
+    res.status(500).json({ error: "File not found" });
+    return;
+  }
+  const { file }: FileArray = req.files;
+  const { secure_url }: any = await upload(file, "/Camiceria/fabric");
+  if (!secure_url) {
+    res.status(500).json({ secure_url, error: "Error generating secure url" });
+    return;
+  }
   const fabric = new Fabric({
     _id: new mongoose.Types.ObjectId(),
     name,
     color,
+    imageUrl: String(secure_url),
   });
 
   return fabric
