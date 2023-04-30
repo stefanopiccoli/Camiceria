@@ -22,8 +22,8 @@ export default function CartPage() {
 
   useEffect(() => {
     userId ? refreshCart(userId) : null;
-    setPrice(articles.length * 30);
-  }, [user]);
+    setPrice((articles.length * 30.00));
+  }, [user, articles.length]);
 
   return (
     <>
@@ -106,7 +106,7 @@ export default function CartPage() {
       >
         <div className="h-3/4 font-bold w-[6rem]">
           <p>Totale</p>
-          <p>{price}</p>
+          <p>{price} &euro;</p>
         </div>
 
         <button className="bg-green-900 text-white h-3/4 w-[6rem] justify-self-end">
