@@ -6,21 +6,27 @@ import {
 } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { auth } from "../auth/firebase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { userStore } from "../store/User";
 
 export default function Login() {
   const user = userStore((store)=>store.user);
   const setUser = userStore((store)=>store.setUser);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
   const handleSubmit = async () => {
     await signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user);
         setError("");
+        // if (redirect)
+        //   navigate(redirect);
+        navigate(-1);
       })
       .catch((error) => {
         setError(error.message);
@@ -35,6 +41,8 @@ export default function Login() {
         setUser(null);
       }
     });
+    // if (msg)
+    // setMessage(msg);
   }, []);
   return (
     <div className="pt-16">
@@ -90,6 +98,11 @@ export default function Login() {
           {error !== "" ? (
             <div className="bg-red-300 w-5/6 mx-auto mt-10 p-2 rounded-md">
               {error.split(":")[1]}
+            </div>
+          ) : null}
+          {message !== "" ? (
+            <div className="bg-green-400 w-5/6 mx-auto mt-10 p-2 rounded-md">
+              {message}
             </div>
           ) : null}
         </div>

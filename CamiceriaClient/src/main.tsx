@@ -14,10 +14,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./auth/firebase";
 import { userStore } from "./store/User";
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <App/>
-);
-
 function App() {
   const setUser = userStore((store)=> store.setUser);
   useEffect(() => {
@@ -46,3 +42,7 @@ function App() {
   </BrowserRouter>
   )
 }
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <App/>
+);

@@ -1,7 +1,7 @@
 import colletto from "../assets/images/collar.webp";
 import tessuto from "../assets/images/fabric.webp";
 import polsino from "../assets/images/cuff.webp";
-import { selectionStore } from "./ShirtConfiguration";
+import { selectionStore } from "../store/Selection";
 import { useNavigate } from "react-router-dom";
 import { cartStore } from "../store/Cart";
 import { userStore } from "../store/User";
@@ -16,16 +16,34 @@ export default function Summary() {
   const measure = selectionStore((store) => store.measure);
 
   const addToCartCustomShirt = cartStore((store) => store.addCustomShirt);
-  const userId = userStore((store)=> store.user?.uid);
-  const refreshCart = cartStore(store=>store.refreshCustomShirts);
+  const resetSelection = selectionStore((store) => store.reset);
+  const userId = userStore((store) => store.user?.uid);
+  const user = userStore((store) => store.user);
+
+  const handleAddToCart = () => {
+    if (userId) {
+      addToCartCustomShirt(
+        {
+          collar: collar,
+          fabric: fabric,
+          cuff: cuff,
+          sign: sign,
+          measure: measure,
+        },
+        userId
+      );
+      resetSelection();
+      navigate("/carrello");
+
+    }
+  };
 
   return (
     <>
-      <div className="h-14"></div>
       <div className="fixed top-14 h-12 w-full bg-white px-2 border-bottom border-2 flex items-center justify-center">
         <h1 className="text-xl">RIEPILOGO</h1>
       </div>
-      <div className="p-4">
+      <div className="pt-28 p-4">
         <div>
           <img className="w-24" src={colletto} alt="" />
           <div>
@@ -82,7 +100,7 @@ export default function Summary() {
         <button
           className="bg-red-900 text-white h-3/4 w-2/5"
           style={{ width: "6rem" }}
-          onClick={()=>navigate("/camicie-personalizzate")}
+          onClick={() => navigate("/camicie-personalizzate")}
         >
           Indietro
         </button>
@@ -90,15 +108,9 @@ export default function Summary() {
         <button
           className="bg-green-900 text-white h-3/4 w-2/5 justify-self-end"
           style={{ width: "6rem" }}
-          onClick={()=>userId? addToCartCustomShirt({
-            collar: collar,
-            fabric: fabric,
-            cuff: cuff,
-            sign: sign,
-            measure: measure
-          },userId): null}
+          onClick={() => (user ? handleAddToCart() : navigate("/accedi"))}
         >
-          AddToCart
+          Aggiungi al carrello
         </button>
       </div>
     </>
