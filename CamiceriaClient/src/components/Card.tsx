@@ -1,7 +1,7 @@
 import colletto from "../assets/images/collar.webp";
 import tessuto from "../assets/images/fabric.webp";
 import polsino from "../assets/images/cuff.webp";
-import { selectionStore } from "../pages/ShirtConfiguration";
+import { selectionStore } from "../store/Selection";
 import {Collar, Cuff, Fabric } from '../interfaces/interfaces';
 
 export function CollarCard({ collar }: { collar: Collar }) {
@@ -43,7 +43,7 @@ export function FabricCard({ fabric }: { fabric: Fabric }) {
       }
       onClick={handleClick}
     >
-      <img src={tessuto} />
+      <img src={fabric.imageUrl} />
       <div className="p-1">
         <div>{fabric.name}</div>
       </div>
@@ -66,7 +66,7 @@ export function CuffCard({ cuff }: { cuff: Cuff }) {
       }
       onClick={handleClick}
     >
-      <img src={polsino} />
+      <img src={cuff.imageUrl} />
       <div className="p-1">
         <div>{cuff.name}</div>
       </div>

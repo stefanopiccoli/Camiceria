@@ -1,5 +1,6 @@
-import { StepNavigationButton, selectionStore } from "../pages/ShirtConfiguration";
+import { StepNavigationButton} from "../pages/ShirtConfiguration";
 import misure from "../assets/images/Misure.png";
+import { selectionStore } from "../store/Selection";
 
 export default function MeasureForm() {
 
@@ -22,7 +23,7 @@ export default function MeasureForm() {
               defaultValue={measure.neck}
               maxLength={3}
               inputMode="numeric"
-              onBlur={(e) => updateMeasure({ neck: Number(e.target.value) })}
+              onChange={(e) => updateMeasure({ neck: Number(e.target.value) })}
             />
             <span className="ml-2">cm</span>
           </div>
@@ -35,7 +36,7 @@ export default function MeasureForm() {
               defaultValue={measure.shoulder}
               maxLength={3}
               inputMode="numeric"
-              onBlur={(e) =>
+              onChange={(e) =>
                 updateMeasure({ shoulder: Number(e.target.value) })
               }
             />
@@ -50,7 +51,7 @@ export default function MeasureForm() {
               defaultValue={measure.chest}
               maxLength={3}
               inputMode="numeric"
-              onBlur={(e) => updateMeasure({ chest: Number(e.target.value) })}
+              onChange={(e) => updateMeasure({ chest: Number(e.target.value) })}
             />
             <span className="ml-2">cm</span>
           </div>
@@ -63,7 +64,7 @@ export default function MeasureForm() {
               defaultValue={measure.hips}
               maxLength={3}
               inputMode="numeric"
-              onBlur={(e) => updateMeasure({ hips: Number(e.target.value) })}
+              onChange={(e) => updateMeasure({ hips: Number(e.target.value) })}
             />
             <span className="ml-2">cm</span>
           </div>
@@ -76,7 +77,7 @@ export default function MeasureForm() {
               defaultValue={measure.sleeve}
               maxLength={3}
               inputMode="numeric"
-              onBlur={(e) => updateMeasure({ sleeve: Number(e.target.value) })}
+              onChange={(e) => updateMeasure({ sleeve: Number(e.target.value) })}
             />
             <span className="ml-2">cm</span>
           </div>

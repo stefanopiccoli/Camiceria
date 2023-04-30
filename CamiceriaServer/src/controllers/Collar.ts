@@ -51,7 +51,6 @@ const readAllCollar = (req: Request, res: Response, next: NextFunction) => {
 };
 const updateCollar = (req: Request, res: Response, next: NextFunction) => {
   const collarId = req.params.collarId;
-  console.log(req.body);
 
   return Collar.findById(collarId)
     .then((collar) => {

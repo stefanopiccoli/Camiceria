@@ -1,12 +1,25 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import Cuff from "../models/Cuff.js";
+import { upload } from "../utils/Cloudinary.js";
+import { FileArray } from "express-fileupload";
 
-const createCuff = (req: Request, res: Response, next: NextFunction) => {
+const createCuff = async (req: Request, res: Response, next: NextFunction) => {
   const { name } = req.body;
+  if (!req.files) {
+    res.status(500).json({ error: "File not found" });
+    return;
+  }
+  const { file }: FileArray = req.files;
+  const { secure_url }: any = await upload(file, "/Camiceria/cuff");
+  if (!secure_url) {
+    res.status(500).json({ secure_url, error: "Error generating secure url" });
+    return;
+  }
   const cuff = new Cuff({
     _id: new mongoose.Types.ObjectId(),
     name,
+    imageUrl: String(secure_url),
   });
 
   return cuff
@@ -32,6 +45,7 @@ const readAllCuff = (req: Request, res: Response, next: NextFunction) => {
 };
 const updateCuff = (req: Request, res: Response, next: NextFunction) => {
   const cuffId = req.params.cuffId;
+  
   return Cuff.findById(cuffId)
     .then((cuff) => {
       if (cuff) {

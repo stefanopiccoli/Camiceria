@@ -6,8 +6,9 @@ import {
   CartActions,
 } from "../interfaces/interfaces";
 import { mountStoreDevtool } from "simple-zustand-devtools";
+import { auth } from "../auth/firebase";
 
-export const cartStore = create<Cart & CartActions>((set) => ({
+export const cartStore = create<Cart & CartActions>((set,get) => ({
   loading: true,
   customShirts: [], //Contiene tutte le camicie personalizzate del carrello
   refreshCustomShirts: async (userId : string) => {
@@ -54,6 +55,7 @@ export const cartStore = create<Cart & CartActions>((set) => ({
       });
 
       let result = await response.json();
+      get().refreshCustomShirts(userId);
       console.log(result);
     } catch (error) {
       console.log(error);
@@ -70,6 +72,8 @@ export const cartStore = create<Cart & CartActions>((set) => ({
         },
       });
       console.log(response);
+      get().refreshCustomShirts(userId);
+
     } catch (error) {
       console.log(error);
     }

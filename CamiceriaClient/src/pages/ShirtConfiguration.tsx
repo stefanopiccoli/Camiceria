@@ -1,79 +1,13 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { create } from "zustand";
-import { mountStoreDevtool } from 'simple-zustand-devtools';
-
-
 import { CollarCard } from "../components/Card";
 import { FabricCard } from "../components/Card";
 import { CuffCard } from "../components/Card";
-import {
-  Collar,
-  Cuff,
-  Fabric,
-  StepNavigation,
-  Sign,
-  Selection,
-  Measure,
-} from "../interfaces/interfaces";
+import { Collar, Cuff, Fabric, StepNavigation } from "../interfaces/interfaces";
 import Loading from "../components/Loading";
 import { useNavigate } from "react-router-dom";
 import SignForm from "../components/SignForm";
 import MeasureForm from "../components/MeasureForm";
-
-type SelectionActions = {
-  updateStep: (step: Selection["step"]) => void;
-  updateCollar: (collar: Selection["collar"]) => void;
-  updateFabric: (fabric: Selection["fabric"]) => void;
-  updateCuff: (cuff: Selection["cuff"]) => void;
-  updateSign: (sign: Partial<Sign>) => void;
-  updateLoading: (loading: boolean) => void;
-  updateMeasure: (measure: Partial<Measure>) => void;
-};
-
-export const selectionStore = create<Selection & SelectionActions>((set) => ({
-  loading: true,
-  updateLoading: (loading) => set(() => ({ loading: loading })),
-  step: "collar",
-  updateStep: (step) => set(() => ({ step: step })),
-  collar: {
-    _id: "0",
-    name: "",
-    buttons: 1,
-    imageUrl:""
-  },
-  updateCollar: (collar) => set(() => ({ collar: collar })),
-  fabric: {
-    _id: "0",
-    name: "",
-    imageUrl:""
-
-  },
-  updateFabric: (fabric) => set(() => ({ fabric: fabric })),
-  cuff: {
-    _id: "0",
-    name: "",
-    imageUrl:""
-
-  },
-  updateCuff: (cuff) => set(() => ({ cuff: cuff })),
-  sign: {
-    do: "unselected",
-    text: "",
-  },
-  updateSign: (sign) => set((state) => ({ sign: { ...state.sign, ...sign } })),
-  measure: {
-    neck: 0,
-    shoulder: 0,
-    chest: 0,
-    hips: 0,
-    sleeve: 0,
-  },
-  updateMeasure: (measure) =>
-    set((state) => ({ measure: { ...state.measure, ...measure } })),
-}));
-
-mountStoreDevtool('selectionStore', selectionStore);
-
+import { selectionStore } from "../store/Selection";
 
 export function ShirtConfiguration() {
   const updateLoading = selectionStore((store) => store.updateLoading);
@@ -83,7 +17,6 @@ export function ShirtConfiguration() {
   const [cuffs, setCuffs] = useState<Cuff[]>([]);
 
   const selection = selectionStore();
-  
 
   const getData = async (
     api: string,
@@ -151,7 +84,7 @@ export function ShirtConfiguration() {
       el = <SignForm />;
       break;
     case "measure":
-      el = <MeasureForm/>;
+      el = <MeasureForm />;
       break;
     default:
       <Loading />;
@@ -231,7 +164,7 @@ export function ShirtConfiguration() {
                   selection.collar._id === "0" ||
                   selection.fabric._id === "0" ||
                   selection.cuff._id === "0" ||
-                  selection.sign.do === false
+                  selection.sign.do === "unselected"
                 }
                 onClick={() => selection.updateStep("measure")}
               >
@@ -246,10 +179,7 @@ export function ShirtConfiguration() {
                 </span>
               </button>
             </div>
-            <div className="pt-16">
-
-            {el}
-            </div>
+            <div className="pt-16">{el}</div>
           </div>
         </div>
       </div>
