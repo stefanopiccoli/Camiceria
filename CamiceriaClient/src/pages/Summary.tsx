@@ -19,6 +19,7 @@ export default function Summary() {
   const resetSelection = selectionStore((store) => store.reset);
   const userId = userStore((store) => store.user?.uid);
   const user = userStore((store) => store.user);
+  const refreshCart = cartStore((store) => store.refreshCustomShirts);
 
   const handleAddToCart = () => {
     if (userId) {
@@ -34,7 +35,7 @@ export default function Summary() {
       );
       resetSelection();
       navigate("/carrello");
-
+      // user ? refreshCart(user?.uid) : null;
     }
   };
 

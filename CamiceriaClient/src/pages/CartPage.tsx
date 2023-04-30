@@ -1,18 +1,29 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { cartStore } from "../store/Cart";
 import { userStore } from "../store/User";
 import { Link } from "react-router-dom";
+import { CustomShirt } from "../interfaces/interfaces";
 
 export default function CartPage() {
   const articles = cartStore((store) => store.customShirts);
-  const remove = cartStore((store) => store.removeCustomShirt);
+
+  const removeCustomShirt = cartStore((store) => store.removeCustomShirt);
   const refreshCart = cartStore((store) => store.refreshCustomShirts);
   const user = userStore((store) => store.user);
   const userId = userStore((store) => store.user?.uid);
+  const [price, setPrice] = useState(0);
+  console.log("oj");
+
+  const handleRemoveFromCart = (_id?: string) => {
+    if (typeof _id !== "undefined" && userId) {
+      removeCustomShirt(_id, userId);
+    }
+  };
 
   useEffect(() => {
     userId ? refreshCart(userId) : null;
-  }, [articles, user]);
+    setPrice(articles.length * 30);
+  }, [user]);
 
   return (
     <>
@@ -23,50 +34,21 @@ export default function CartPage() {
         {user ? (
           <div className="mt-28">
             {articles.map((item, index) => (
-              // <div key={index} className="border pt-1 mb-4">
-              //   <p>{item.collar.name}</p>
-              //   <p>{item.fabric.name}</p>
-              //   <p>{item.cuff.name}</p>
-              //   <p>
-              //     {item.sign.do && item.sign.text}(
-              //     {item.sign.do && item.sign.font})
-              //   </p>
-              //   <p>
-              //     {item.measure.chest}
-              //     {item.measure.hips}
-              //     {item.measure.neck}
-              //     {item.measure.shoulder}
-              //     {item.measure.sleeve}
-              //   </p>
-              //   <button
-              //     onClick={() =>
-              //       typeof item._id !== "undefined" && userId
-              //         ? remove(item._id, userId)
-              //         : null
-              //     }
-              //   >
-              //     Rimuovi
-              //   </button>
-              // </div>
               <div key={index} className="px-1 my-1">
                 <details className=" bg-white p-2 border-2 mx-auto overflow-hidden open:!max-h-[400px]">
-                  <summary className="cursor-pointer marker:text-transparent flex justify-between gap-4">
-                    <img className="h-20" src={item.collar.imageUrl} alt="" />
-                    <div className="text-lg">
+                  <summary className="cursor-pointer marker:text-transparent grid grid-cols-4">
+                    <img className="h-20" src={item.fabric.imageUrl} alt="" />
+                    <div className="text-lg col-span-2">
                       <ul>
                         <li>{item.collar.name}</li>
                         <li>{item.fabric.name}</li>
                         <li>{item.cuff.name}</li>
                       </ul>
                     </div>
-                    <div className="flex flex-col justify-center ">
+                    <div className="flex flex-col justify-self-end self-center ">
                       <i
                         className="fa fa-times text-3xl text-red-900"
-                        onClick={() =>
-                          typeof item._id !== "undefined" && userId
-                            ? remove(item._id, userId)
-                            : null
-                        }
+                        onClick={() => handleRemoveFromCart(item._id)}
                       ></i>
                     </div>
                   </summary>
@@ -117,6 +99,19 @@ export default function CartPage() {
             </p>
           </div>
         )}
+      </div>
+      <div
+        className="fixed grid grid-flow-col items-center border-t px-4 border-t-neutral-300 bottom-0 w-full h-16 bg-white "
+        id="buttons"
+      >
+        <div className="h-3/4 font-bold w-[6rem]">
+          <p>Totale</p>
+          <p>{price}</p>
+        </div>
+
+        <button className="bg-green-900 text-white h-3/4 w-[6rem] justify-self-end">
+          Ordina
+        </button>
       </div>
     </>
   );

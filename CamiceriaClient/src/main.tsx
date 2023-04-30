@@ -6,7 +6,7 @@ import Home from "./pages/Home";
 import "./index.css";
 import Summary from "./pages/Summary";
 import CartPage from "./pages/CartPage";
-import ManageArticles, { ManageCollars } from "./pages/ManageArticles";
+import ManageArticles, { ManageCollars, ManageCuffs, ManageFabrics } from "./pages/ManageArticles";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import { useEffect } from "react";
@@ -38,6 +38,8 @@ function App() {
       <Route path="carrello" element={<CartPage />} />
       <Route path="gestione-articoli" element={<ManageArticles />} />
       <Route path="gestione-articoli/colletti" element={<ManageCollars />}></Route>
+      <Route path="gestione-articoli/tessuti" element={<ManageFabrics />}></Route>
+      <Route path="gestione-articoli/polsini" element={<ManageCuffs />}></Route>
     </Routes>
   </BrowserRouter>
   )

@@ -50,6 +50,7 @@ const readAllFabric = (req: Request, res: Response, next: NextFunction) => {
 };
 const updateFabric = (req: Request, res: Response, next: NextFunction) => {
   const fabricId = req.params.fabricId;
+  
   return Fabric.findById(fabricId)
     .then((fabric) => {
       if (fabric) {
