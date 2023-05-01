@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import User from "../models/User.js";
-import { error } from "console";
+import { IOrder } from "../models/Order.js";
 
 const createUser = (req: Request, res: Response, next: NextFunction) => {
   const { _id, username, cart } = req.body;
@@ -63,6 +63,8 @@ const deleteUser = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
+// CART
+
 const addToCart = (req: Request & { userId?: string }, res: Response, next: NextFunction) => {
   const userId = req.userId;
   console.log(userId);
@@ -112,6 +114,47 @@ const removeFromCart = (req: Request & { userId?: string }, res: Response, next:
     });
 };
 
+//ORDERS
+
+const readAllOrders = (req: Request & { userId?: string }, res: Response, next: NextFunction) => {
+  const userId = req.userId;
+  if (!userId)
+  return res.status(401).json({message: "Unauthorized"})
+
+  return User.findOne({ _id: userId })
+    .then((customShirts) => res.status(200).json(customShirts))
+    .catch((error) => res.status(500).json({ error }));
+}
+
+const addToOrders = (req: Request & { userId?: string }, res: Response, next: NextFunction) => {
+  const userId = req.userId;
+  console.log(userId);
+  
+  if (!userId)
+  return res.status(401).json({message: "Unauthorized"})
+
+  const {articles, address} = req.body;
+  
+
+  const order : IOrder = {
+    _id: new mongoose.Types.ObjectId(),
+    articles: articles,
+    date: new Date,
+    state: "pending",
+    address: address,
+    price: 0
+  } 
+
+  return User.findOneAndUpdate(
+    { _id: userId },
+    { $push: { "orders": order } }
+  )
+    .then(() =>
+      res.status(200).json({ message: "data updated", order: order })
+    )
+    .catch((error) => res.status(500).json({ error }));
+};
+
 export default {
   createUser,
   readUser,
@@ -121,4 +164,6 @@ export default {
   addToCart,
   readAllCustomShirts,
   removeFromCart,
+  readAllOrders,
+  addToOrders
 };

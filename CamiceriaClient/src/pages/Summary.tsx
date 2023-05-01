@@ -31,7 +31,6 @@ export default function Summary() {
           sign: sign,
           measure: measure,
         },
-        userId
       );
       resetSelection();
       navigate("/carrello");

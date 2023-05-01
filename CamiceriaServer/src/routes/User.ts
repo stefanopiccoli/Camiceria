@@ -9,9 +9,16 @@ router.get('/get/:userId',controller.readUser);
 router.get('/get/',controller.readAllUser);
 router.patch('/update/:userId',controller.updateUser);
 router.delete('/delete/:userId',controller.deleteUser);
+
+
+// CART
 router.use(decodeToken);
 router.patch('/addToCart/',controller.addToCart);
 router.get('/cart/customShirts/', controller.readAllCustomShirts);
 router.patch('/cart/remove/:id', controller.removeFromCart);
+// ORDER
+router.get('/order/',controller.readAllOrders);
+router.post('/order/create',controller.addToOrders);
+router.get('/order/:idOrder');
 
 export default router;

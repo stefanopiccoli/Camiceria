@@ -9,6 +9,7 @@ import CartPage from "./pages/CartPage";
 import ManageArticles, { ManageCollars, ManageCuffs, ManageFabrics } from "./pages/ManageArticles";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import OrderForm from "./pages/OrderForm";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Route path="camicie-personalizzate" element={<ShirtConfiguration />} />
       <Route path="riepilogo" element={<Summary />} />
       <Route path="carrello" element={<CartPage />} />
+      <Route path="ordine" element={<OrderForm/>}></Route>
       <Route path="gestione-articoli" element={<ManageArticles />} />
       <Route path="gestione-articoli/colletti" element={<ManageCollars />}></Route>
       <Route path="gestione-articoli/tessuti" element={<ManageFabrics />}></Route>

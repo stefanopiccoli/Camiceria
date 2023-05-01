@@ -1,23 +1,27 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { ObjectId, Schema } from "mongoose";
 import { CustomShirtSchema, ICustomShirt } from "./CustomShirt.js";
 
 export interface IOrder {
-  _id: string;
+  _id: mongoose.Types.ObjectId;
   date: Date;
   articles: ICustomShirt[];
-  state: "pending" | "paid" | "delivered" | "canceled"
+  state: "pending" | "paid" | "delivered" | "canceled";
+  price: number,
+  address: string
 }
 
 export interface IOrderModel extends IOrder, Document {}
 
-const OrderSchema: Schema = new Schema(
+export const OrderSchema: Schema = new Schema(
   {
     _id: {type: String, require: true},
     date: {type: Date},
     articles: {
       customShirts: { type: [CustomShirtSchema] },
     },
-    state: {type: String}
+    state: {type: String},
+    price: {type: Number},
+    address: {type: String}
   },
   { versionKey: false }
 );
