@@ -4,7 +4,7 @@ import User from "../models/User.js";
 import { error } from "console";
 
 const createUser = (req: Request, res: Response, next: NextFunction) => {
-  const {_id, username, cart } = req.body;
+  const { _id, username, cart } = req.body;
   const user = new User({
     _id,
     username,
@@ -14,7 +14,9 @@ const createUser = (req: Request, res: Response, next: NextFunction) => {
   return user
     .save()
     .then((user) => res.status(201).json({ user }))
-    .catch((error) => {res.status(500).json(error); console.log(error);
+    .catch((error) => {
+      res.status(500).json(error);
+      console.log(error);
     });
 };
 const readUser = (req: Request, res: Response, next: NextFunction) => {
@@ -61,11 +63,16 @@ const deleteUser = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-const addToCart = (req: Request, res: Response, next: NextFunction) => {
-  const {userId, ...article} = req.body;
+const addToCart = (req: Request & { userId?: string }, res: Response, next: NextFunction) => {
+  const userId = req.userId;
+  console.log(userId);
+  
+  if (!userId)
+  return res.status(401).json({message: "Unauthorized"})
+  const article = req.body;
   return User.findOneAndUpdate(
     { _id: userId },
-    { $push: { "cart.customShirts": article } },
+    { $push: { "cart.customShirts": article } }
   )
     .then(() =>
       res.status(200).json({ message: "data updated", article: article })
@@ -74,38 +81,35 @@ const addToCart = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const readAllCustomShirts = (
-  req: Request,
+  req: Request & { userId?: string },
   res: Response,
   next: NextFunction
 ) => {
-  
-  return User.findOne({ _id: req.params.id })
+  const userId = req.userId;
+  if (!userId)
+  return res.status(401).json({message: "Unauthorized"})
+
+  return User.findOne({ _id: userId })
     .then((customShirts) => res.status(200).json(customShirts))
     .catch((error) => res.status(500).json({ error }));
 };
 
-const removeFromCart = (req: Request, res: Response, next: NextFunction) => {
-  const id = req.params.id;
-  console.log(id);
-  const {userId} = req.body;  
+const removeFromCart = (req: Request & { userId?: string }, res: Response, next: NextFunction) => {
+  const itemId = req.params.id;
+  const userId = req.userId;
+  if (!userId)
+  return res.status(401).json({message: "Unauthorized"})
 
-  // return User.findOne({
-  //   username: "FrancescoTotti","cart.customShirts._id":id},'cart.customShirts.$')
   User.updateOne(
     { _id: userId },
-    { $pull: { "cart.customShirts": { "_id": id } } }
+    { $pull: { "cart.customShirts": { _id: itemId } } }
   )
 
-    .then((ris) => res.status(200).json({message: "updated", ris}))
+    .then((ris) => res.status(200).json({ message: "updated", ris }))
     .catch((error) => {
       res.status(500).send(error);
       console.log(error);
     });
-  // const updated = await User.findOne({username:"FrancescoTotti"});
-  // const array = updated?.cart.customShirts;
-  // const newarray = array?.filter((item)=>item._id!== id);
-  // newarray.save();
-  // res.status(200).send(updated?.cart.customShirts);
 };
 
 export default {

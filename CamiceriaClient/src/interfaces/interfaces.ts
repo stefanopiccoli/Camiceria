@@ -57,11 +57,6 @@ export interface Cart {
   customShirts: CustomShirt[];
 }
 
-export interface CartActions {
-  refreshCustomShirts: (userId: string) => void;
-  addCustomShirt: (customShirt: CustomShirt, userId: string) => void;
-  removeCustomShirt: (id: string, userId: string) => void;
-}
 
 export interface CustomShirt {
   _id?: string;
@@ -77,7 +72,8 @@ export interface Shirt {
 }
 
 export interface User {
-  user: FirebaseUser | null
+  user: FirebaseUser | null;
+  token: string | null;
 }
 
 // export const collett: Collar[] = [

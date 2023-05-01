@@ -9,22 +9,8 @@ import CartPage from "./pages/CartPage";
 import ManageArticles, { ManageCollars, ManageCuffs, ManageFabrics } from "./pages/ManageArticles";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import { useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./auth/firebase";
-import { userStore } from "./store/User";
 
 function App() {
-  const setUser = userStore((store)=> store.setUser);
-  useEffect(() => {
-    const listen = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    });
-  }, []);
   return (
     <BrowserRouter>
     <NavigationBar></NavigationBar>

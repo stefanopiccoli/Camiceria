@@ -9,6 +9,7 @@ import fabricRoutes from "./routes/Fabric.js";
 import cuffRoutes from "./routes/Cuff.js";
 import userRoutes from "./routes/User.js";
 import { CLOUDINARY_CONFIG, config } from "./config/config.js";
+import { decodeToken } from "./middlewares/Auth.js";
 
 const app = express();
 export const cloud = cloudinary.v2;
