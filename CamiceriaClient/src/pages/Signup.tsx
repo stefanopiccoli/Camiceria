@@ -19,7 +19,7 @@ export default function Signup() {
         try {
           const response = fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
             method: "POST",
-            body: JSON.stringify({ _id: user.uid }),
+            body: JSON.stringify({ _id: user.uid, email }),
             headers: {
               "Content-Type": "application/json",
             },

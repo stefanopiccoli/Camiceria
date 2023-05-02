@@ -6,7 +6,7 @@ import Home from "./pages/Home";
 import "./index.css";
 import Summary from "./pages/Summary";
 import CartPage from "./pages/CartPage";
-import ManageArticles, { ManageCollars, ManageCuffs, ManageFabrics } from "./pages/ManageArticles";
+import ManageArticles, { ManageCollars, ManageCuffs, ManageFabrics, ManageOrders } from "./pages/ManageArticles";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import OrderForm from "./pages/OrderForm";
@@ -49,6 +49,7 @@ function App() {
       <Route path="gestione-articoli/colletti" element={<ManageCollars />}></Route>
       <Route path="gestione-articoli/tessuti" element={<ManageFabrics />}></Route>
       <Route path="gestione-articoli/polsini" element={<ManageCuffs />}></Route>
+      <Route path="gestione-articoli/ordini" element={<ManageOrders />}></Route>
     </Routes>
   </BrowserRouter>
   )

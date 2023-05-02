@@ -59,10 +59,7 @@ function NavigationBar() {
               aria-hidden="true"
               onClick={() => setMenu("closed")}
             ></i>
-            <div className="w-3/4 mt-14 mx-auto ">
-              <Link to="/camicie" onClick={() => setMenu("closed")}>
-                {/* <h3 className="text-center text-white text-2xl">Camicie</h3> */}
-              </Link>
+            <div className="w-3/4 mt-28 flex flex-col gap-8 mx-auto ">
               <Link
                 to="/camicie-personalizzate"
                 onClick={() => setMenu("closed")}
@@ -71,8 +68,13 @@ function NavigationBar() {
                   Crea la tua camicia
                 </h3>
               </Link>
-              <Link to="/cravatte" onClick={() => setMenu("closed")}>
-                {/* <h3 className="text-center text-white text-2xl">Cravatte</h3> */}
+              <Link
+                to="/profilo"
+                onClick={() => setMenu("closed")}
+              >
+                <h3 className="text-center text-white text-2xl">
+                  I miei ordini
+                </h3>
               </Link>
               <Link to="/gestione-articoli" onClick={() => setMenu("closed")}>
                 <h3 className="text-center text-white text-2xl">

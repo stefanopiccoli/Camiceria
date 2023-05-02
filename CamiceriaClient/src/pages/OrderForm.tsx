@@ -18,9 +18,9 @@ export default function OrderForm() {
   const [cap, setCap] = useState("");
   const [price, setPrice] = useState(articles.length);
 
-  const handleAddToOrders = async (e : React.FormEvent<HTMLFormElement>) => {
+  const handleAddToOrders = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const api = "/api/users/order/create";
     try {
       const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
@@ -29,13 +29,22 @@ export default function OrderForm() {
           "Content-Type": "application/json",
           authorization: "Bearer " + token,
         },
-        body: JSON.stringify({ articles: articles }),
+        body: JSON.stringify({
+          price: price,
+          articles: articles,
+          shipment: {
+            name,
+            address: address,
+            city: city,
+            province,
+            cap
+          },
+        }),
       });
 
       let result = await response.json();
       console.log(result);
       console.log(articles);
-      
     } catch (error) {
       console.log(error);
     }

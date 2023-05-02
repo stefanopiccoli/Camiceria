@@ -7,9 +7,15 @@ export interface IOrder {
   articles: {
     customShirts: ICustomShirt[];
   };
-  state: "pending" | "paid" | "delivered" | "canceled";
+  state: "pending" | "shipped" | "delivered" | "canceled";
   price: number;
-  address: string;
+  shipment: {
+    name: string;
+    address : string;
+    city: string;
+    province: string;
+    cap: string;
+  }
 }
 
 export interface IOrderModel extends IOrder, Document {}
@@ -23,7 +29,13 @@ export const OrderSchema: Schema = new Schema(
     },
     state: { type: String },
     price: { type: Number },
-    address: { type: String },
+    shipment: {
+      name: {type: String},
+      address : {type: String},
+      city: {type: String},
+      province: {type: String},
+      cap: {type: String},
+    }
   },
   { versionKey: false }
 );

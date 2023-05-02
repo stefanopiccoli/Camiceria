@@ -5,6 +5,7 @@ import { IOrder, OrderSchema } from "./Order.js";
 export interface IUser {
   _id: string;
   username: string;
+  email: string;
   role: string;
   cart: {
     customShirts: ICustomShirt[];
@@ -17,6 +18,7 @@ export interface IUserModel extends IUser, Document {}
 const UserSchema: Schema = new Schema(
   {
     _id: {type: String, require: true},
+    email: {type: String},
     username: { type: String},
     role: {type: String},
     cart: {

@@ -1,6 +1,6 @@
 import express from 'express'
 import controller from '../controllers/User.js'
-import { decodeToken } from '../middlewares/Auth.js';
+import { adminCheck, decodeToken } from '../middlewares/Auth.js';
 
 const router = express.Router();
 
@@ -20,5 +20,8 @@ router.patch('/cart/remove/:id', controller.removeFromCart);
 router.get('/order/',controller.readAllOrders);
 router.post('/order/create',controller.addToOrders);
 router.get('/order/:idOrder');
+
+router.use(adminCheck);
+router.get('/order/all', controller.readAllOrdersAdmin);
 
 export default router;

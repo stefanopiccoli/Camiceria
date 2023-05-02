@@ -77,14 +77,28 @@ export interface Order {
   articles: {
     customShirts: CustomShirt[];
   };
-  state: "pending" | "paid" | "delivered" | "canceled";
+  state: "pending" | "shipped" | "delivered" | "canceled";
   price: number;
-  address: string;
+  shipment: {
+    name: string;
+    address : string;
+    city: string;
+    province: string;
+    cap: string;
+  }
 }
 
 export interface User {
   user: FirebaseUser | null;
   token: string | null;
+}
+
+export interface UserMDB {
+  _id: string;
+  username: string;
+  email: string;
+  role: string;
+  orders: Order;
 }
 
 // export const collett: Collar[] = [
