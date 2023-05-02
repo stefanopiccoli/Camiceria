@@ -19,7 +19,7 @@ html{
 }
 
 input[type="text"], input[type="email"], input[type="password"]{
-    @apply border-2 rounded-md text-lg;
+    @apply border-2 rounded-md text-lg px-1;
 }
 
 input[type="number"]{

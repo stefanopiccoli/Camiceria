@@ -3,27 +3,46 @@ import { cartStore } from "../store/Cart";
 import { userStore } from "../store/User";
 import { Link } from "react-router-dom";
 import { CustomShirt } from "../interfaces/interfaces";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../auth/firebase";
 
 export default function CartPage() {
   const articles = cartStore((store) => store.customShirts);
 
   const removeCustomShirt = cartStore((store) => store.removeCustomShirt);
   const refreshCart = cartStore((store) => store.refreshCustomShirts);
-  const user = userStore((store) => store.user);
-  const userId = userStore((store) => store.user?.uid);
+  const token = userStore((store) => store.token);
   const [price, setPrice] = useState(0);
+  const setUser = userStore((store) => store.setUser);
+  const setToken = userStore((store) => store.setToken);
   console.log("oj");
 
-  const handleRemoveFromCart = (_id?: string) => {
-    if (typeof _id !== "undefined" && userId) {
-      removeCustomShirt(_id, userId);
+  const handleRemoveFromCart = (itemId?: string) => {
+    if (typeof itemId !== "undefined") {
+      removeCustomShirt(itemId);
     }
   };
 
   useEffect(() => {
-    userId ? refreshCart(userId) : null;
-    setPrice((articles.length * 30.00));
-  }, [user, articles.length]);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        user.getIdToken().then((token) => {
+          setToken(token);
+        });
+      } else {
+        setUser(null);
+        setToken(null);
+      }
+    });
+  });
+
+  useEffect(() => {
+    token ? refreshCart() : null;
+    setPrice(articles.length * 30.0);
+  }, [token, articles.length]);
+
+  
 
   return (
     <>
@@ -31,7 +50,7 @@ export default function CartPage() {
         <h1 className="text-xl">CARRELLO</h1>
       </div>
       <div className="bg-gray-100">
-        {user ? (
+        {token ? (
           <div className="mt-28">
             {articles.map((item, index) => (
               <div key={index} className="px-1 my-1">
@@ -108,9 +127,8 @@ export default function CartPage() {
           <p>Totale</p>
           <p>{price} &euro;</p>
         </div>
-
         <button className="bg-green-900 text-white h-3/4 w-[6rem] justify-self-end">
-          Ordina
+          <Link to="/ordine">Ordina</Link>
         </button>
       </div>
     </>

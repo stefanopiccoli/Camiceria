@@ -57,11 +57,6 @@ export interface Cart {
   customShirts: CustomShirt[];
 }
 
-export interface CartActions {
-  refreshCustomShirts: (userId: string) => void;
-  addCustomShirt: (customShirt: CustomShirt, userId: string) => void;
-  removeCustomShirt: (id: string, userId: string) => void;
-}
 
 export interface CustomShirt {
   _id?: string;
@@ -76,8 +71,34 @@ export interface Shirt {
   price: number;
 }
 
+export interface Order {
+  _id: string;
+  date: Date;
+  articles: {
+    customShirts: CustomShirt[];
+  };
+  state: "pending" | "shipped" | "delivered" | "canceled";
+  price: number;
+  shipment: {
+    name: string;
+    address : string;
+    city: string;
+    province: string;
+    cap: string;
+  }
+}
+
 export interface User {
-  user: FirebaseUser | null
+  user: FirebaseUser | null;
+  token: string | null;
+}
+
+export interface UserMDB {
+  _id: string;
+  username: string;
+  email: string;
+  role: string;
+  orders: Order;
 }
 
 // export const collett: Collar[] = [

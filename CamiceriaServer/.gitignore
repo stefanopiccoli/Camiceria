@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 *.env
 /tmp
+/src/config/SDKAdminKey.json

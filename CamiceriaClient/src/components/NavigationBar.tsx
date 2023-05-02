@@ -4,9 +4,26 @@ import { useState } from "react";
 import { userStore } from "../store/User";
 import { signOut } from "firebase/auth";
 import { auth } from "../auth/firebase";
+import { cartStore } from "../store/Cart";
 
 function NavigationBar() {
   const user = userStore((store) => store.user);
+  const setUser = userStore((store) => store.setUser);
+  const setToken = userStore((store) => store.setToken);
+  const refreshCart = cartStore((store) => store.refreshCustomShirts);
+
+  const handleLogOut = () => {
+    signOut(auth)
+      .then(() => {
+        console.log("Signed out");
+        setUser(null);
+        setToken(null);
+        setMenu("closed");
+        refreshCart();
+      })
+      .catch((error) => console.log(error));
+  };
+
   const [menu, setMenu] = useState<"open" | "closed">("closed");
   return (
     <>
@@ -42,10 +59,7 @@ function NavigationBar() {
               aria-hidden="true"
               onClick={() => setMenu("closed")}
             ></i>
-            <div className="w-3/4 mt-14 mx-auto ">
-              <Link to="/camicie" onClick={() => setMenu("closed")}>
-                {/* <h3 className="text-center text-white text-2xl">Camicie</h3> */}
-              </Link>
+            <div className="w-3/4 mt-28 flex flex-col gap-8 mx-auto ">
               <Link
                 to="/camicie-personalizzate"
                 onClick={() => setMenu("closed")}
@@ -54,8 +68,13 @@ function NavigationBar() {
                   Crea la tua camicia
                 </h3>
               </Link>
-              <Link to="/cravatte" onClick={() => setMenu("closed")}>
-                {/* <h3 className="text-center text-white text-2xl">Cravatte</h3> */}
+              <Link
+                to="/profilo"
+                onClick={() => setMenu("closed")}
+              >
+                <h3 className="text-center text-white text-2xl">
+                  I miei ordini
+                </h3>
               </Link>
               <Link to="/gestione-articoli" onClick={() => setMenu("closed")}>
                 <h3 className="text-center text-white text-2xl">
@@ -67,20 +86,13 @@ function NavigationBar() {
               {user ? (
                 <div className="text-center text-white text-lg ">
                   {user.email}
-                  <p
-                    onClick={() =>
-                      signOut(auth)
-                        .then(() => console.log("Signed out"))
-                        .catch((error) => console.log(error))
-                    }
-                    className="underline"
-                  >
+                  <p onClick={() => handleLogOut()} className="underline">
                     Logout
                   </p>
                 </div>
               ) : (
                 <div className="w-3/4 h-12 mt-20 mx-auto bg-slate-100 flex justify-center items-center">
-                  <Link to="/accedi">
+                  <Link to="/accedi" onClick={()=>setMenu("closed")}>
                     <h3>Accedi</h3>
                   </Link>
                 </div>

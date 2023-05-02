@@ -3,8 +3,9 @@ import tessuto from "../assets/images/fabric.webp";
 import polsino from "../assets/images/cuff.webp";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Collar, Cuff, Fabric } from "../interfaces/interfaces";
+import { Collar, Cuff, Fabric, Order, User, UserMDB } from "../interfaces/interfaces";
 import Loading from "../components/Loading";
+import { userStore } from "../store/User";
 
 export default function ManageArticles() {
   const location = useLocation();
@@ -24,10 +25,10 @@ export default function ManageArticles() {
           </div>
         </Link>
         <Link to="polsini">
-        <div className="border-2">
-          <img src={polsino} alt="" />
-          <p className="text-center">Polsini</p>
-        </div>
+          <div className="border-2">
+            <img src={polsino} alt="" />
+            <p className="text-center">Polsini</p>
+          </div>
         </Link>
       </div>
     </>
@@ -35,6 +36,8 @@ export default function ManageArticles() {
 }
 
 export function ManageCollars() {
+  const token = userStore((store) => store.token);
+
   const [loading, setLoading] = useState(true);
   const [collars, setCollars] = useState<Collar[]>([]);
   const [name, setName] = useState("");
@@ -53,6 +56,7 @@ export function ManageCollars() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          authorization: "Bearer " + token,
         },
       });
 
@@ -78,6 +82,9 @@ export function ManageCollars() {
       const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
         method: "POST",
         body: formData,
+        headers: {
+          authorization: "Bearer " + token,
+        },
       });
 
       let result = await response.json();
@@ -96,6 +103,7 @@ export function ManageCollars() {
         body: JSON.stringify(update),
         headers: {
           "Content-Type": "application/json",
+          authorization: "Bearer " + token,
         },
       });
 
@@ -114,6 +122,7 @@ export function ManageCollars() {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          authorization: "Bearer " + token,
         },
       });
       let result = await response.json();
@@ -235,6 +244,8 @@ export function ManageCollars() {
 }
 
 export function ManageFabrics() {
+  const token = userStore((store) => store.token);
+
   const [loading, setLoading] = useState(true);
   const [fabrics, setFabrics] = useState<Fabric[]>([]);
   const [name, setName] = useState("");
@@ -252,6 +263,7 @@ export function ManageFabrics() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          authorization: "Bearer " + token,
         },
       });
 
@@ -275,6 +287,9 @@ export function ManageFabrics() {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
         method: "POST",
+        headers: {
+          authorization: "Bearer " + token,
+        },
         body: formData,
       });
 
@@ -294,6 +309,7 @@ export function ManageFabrics() {
         body: JSON.stringify(update),
         headers: {
           "Content-Type": "application/json",
+          authorization: "Bearer " + token,
         },
       });
 
@@ -312,6 +328,7 @@ export function ManageFabrics() {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          authorization: "Bearer " + token,
         },
       });
       let result = await response.json();
@@ -404,6 +421,8 @@ export function ManageFabrics() {
 }
 
 export function ManageCuffs() {
+  const token = userStore((store) => store.token);
+
   const [loading, setLoading] = useState(true);
   const [cuffs, setCuffs] = useState<Cuff[]>([]);
   const [name, setName] = useState("");
@@ -421,6 +440,7 @@ export function ManageCuffs() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          authorization: "Bearer " + token,
         },
       });
 
@@ -444,6 +464,9 @@ export function ManageCuffs() {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
         method: "POST",
+        headers: {
+          authorization: "Bearer " + token,
+        },
         body: formData,
       });
 
@@ -463,6 +486,8 @@ export function ManageCuffs() {
         body: JSON.stringify(update),
         headers: {
           "Content-Type": "application/json",
+          authorization: "Bearer " + token,
+
         },
       });
 
@@ -481,6 +506,8 @@ export function ManageCuffs() {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          authorization: "Bearer " + token,
+
         },
       });
       let result = await response.json();
@@ -571,3 +598,121 @@ export function ManageCuffs() {
     </>
   );
 }
+
+
+
+export function ManageOrders() {
+  const [users, setUsers] = useState<UserMDB[]>([]);
+  const token = userStore((store)=> store.token);
+
+  const renderState = (state: Order["state"]) => {
+    switch (state) {
+      case "pending":
+        return (
+          <p>
+            <i
+              className="fa fa-circle text-sm text-yellow-400"
+              aria-hidden="true"
+            ></i>
+            In lavorazione
+          </p>
+        );
+      case "shipped":
+        return (
+          <i
+            className="fa fa-circle text-sm text-blue-400"
+            aria-hidden="true"
+          ></i>
+        );
+      case "canceled":
+        return (
+          <i
+            className="fa fa-circle text-sm text-red-600"
+            aria-hidden="true"
+          ></i>
+        );
+      case "delivered":
+        return (
+          <i
+            className="fa fa-circle text-sm text-green-700"
+            aria-hidden="true"
+          ></i>
+        );
+    }
+  };
+
+  const getData = async (
+    api: string,
+  ) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: "Bearer " + token,
+        },
+      });
+
+      let result = await response.json();
+      console.log(result);
+      setUsers(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    token ? getData("/api/users/order/all") : null;
+  }, [token]);
+
+  return (
+    <div className="pt-28">
+      {users?.map((item,index)=>(
+        <div key={item.orders._id} className="border bg-zinc-400 w-full my-4">
+        <details className="bg-white p-2 border-2 mx-auto overflow-hidden open:!max-h-[400px]">
+          <summary className="cursor-pointer marker:text-transparent grid grid-flow-col">
+            {renderState(item.orders.state)}
+            <p>{item.email}</p>
+            <p>{item.orders.price.toFixed(2)} &euro;</p>
+          </summary>
+
+          <hr className="my-2 scale-x-150" />
+
+          <div className="text -m-4 -mt-2 p-4 bg-gray-50">
+            <div className="grid grid-cols-2">
+              <div>
+                <p className="text-sm italic">Data ordine:</p>
+                <p>{new Date(item.orders.date).toLocaleString()}</p>
+              </div>
+              <div>
+                <p className="text-sm italic">Spedizione:</p>
+                <p>{item.orders.shipment.name}</p>
+                <p>{item.orders.shipment.address}</p>
+                <p>
+                  {item.orders.shipment.city}({item.orders.shipment.province})
+                </p>
+                <p>{item.orders.shipment.cap}</p>
+              </div>
+              <div className="col-span-2 border-2 p-1">
+                <p className="text-sm italic">Articoli:</p>
+                <div className="h-44 overflow-y-scroll">
+                  {item.orders.articles.customShirts.map((item, index) => (
+                    <div key={item._id} className="grid grid-cols-12 gap-x-2 p-2">
+                      <p className="w-3">{index+1}</p>
+                      <img className="w-32 col-span-5" src={item.fabric.imageUrl} />
+                      <div className="col-span-6">
+                        <p>{item.collar.name}</p>
+                        <p>{item.fabric.name}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+      ))}
+    </div>
+  )
+}
+

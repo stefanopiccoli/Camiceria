@@ -1,20 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import User from "../models/User.js";
-import { error } from "console";
+import { IOrder } from "../models/Order.js";
 
 const createUser = (req: Request, res: Response, next: NextFunction) => {
-  const {_id, username, cart } = req.body;
+  const { _id, username, cart, email } = req.body;
   const user = new User({
     _id,
     username,
     cart,
+    email,
+    role: "",
   });
 
   return user
     .save()
     .then((user) => res.status(201).json({ user }))
-    .catch((error) => {res.status(500).json(error); console.log(error);
+    .catch((error) => {
+      res.status(500).json(error);
+      console.log(error);
     });
 };
 const readUser = (req: Request, res: Response, next: NextFunction) => {
@@ -61,11 +65,21 @@ const deleteUser = (req: Request, res: Response, next: NextFunction) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-const addToCart = (req: Request, res: Response, next: NextFunction) => {
-  const {userId, ...article} = req.body;
+// CART
+
+const addToCart = (
+  req: Request & { userId?: string },
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.userId;
+  console.log(userId);
+
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+  const article = req.body;
   return User.findOneAndUpdate(
     { _id: userId },
-    { $push: { "cart.customShirts": article } },
+    { $push: { "cart.customShirts": article } }
   )
     .then(() =>
       res.status(200).json({ message: "data updated", article: article })
@@ -74,38 +88,112 @@ const addToCart = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const readAllCustomShirts = (
-  req: Request,
+  req: Request & { userId?: string },
   res: Response,
   next: NextFunction
 ) => {
-  
-  return User.findOne({ _id: req.params.id })
+  const userId = req.userId;
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+  return User.findOne({ _id: userId })
     .then((customShirts) => res.status(200).json(customShirts))
     .catch((error) => res.status(500).json({ error }));
 };
 
-const removeFromCart = (req: Request, res: Response, next: NextFunction) => {
-  const id = req.params.id;
-  console.log(id);
-  const {userId} = req.body;  
+const removeFromCart = (
+  req: Request & { userId?: string },
+  res: Response,
+  next: NextFunction
+) => {
+  const itemId = req.params.id;
+  const userId = req.userId;
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
-  // return User.findOne({
-  //   username: "FrancescoTotti","cart.customShirts._id":id},'cart.customShirts.$')
   User.updateOne(
     { _id: userId },
-    { $pull: { "cart.customShirts": { "_id": id } } }
+    { $pull: { "cart.customShirts": { _id: itemId } } }
   )
 
-    .then((ris) => res.status(200).json({message: "updated", ris}))
+    .then((ris) => res.status(200).json({ message: "updated", ris }))
     .catch((error) => {
       res.status(500).send(error);
       console.log(error);
     });
-  // const updated = await User.findOne({username:"FrancescoTotti"});
-  // const array = updated?.cart.customShirts;
-  // const newarray = array?.filter((item)=>item._id!== id);
-  // newarray.save();
-  // res.status(200).send(updated?.cart.customShirts);
+};
+
+//ORDERS
+
+const readAllOrders = (
+  req: Request & { userId?: string },
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.userId;
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+  User.aggregate([
+    { $match: { _id: userId } },
+    {
+      $project: {
+        _id: 0,
+        result: { $sortArray: { input: "$orders", sortBy: { date: -1 } } },
+      },
+    },
+  ])
+    .then((orders) => res.status(200).json(orders))
+    .catch((error) => res.status(500).json({ error }));
+  // return User.findOne({ _id: userId },{orders:1, _id:0})
+};
+
+const addToOrders = (
+  req: Request & { userId?: string },
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.userId;
+  console.log(userId);
+
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+  const { articles, shipment, price } = req.body;
+
+  const order: IOrder = {
+    _id: new mongoose.Types.ObjectId(),
+    articles: { customShirts: articles },
+    date: new Date(),
+    state: "pending",
+    shipment: shipment,
+    price: price,
+  };
+
+  return User.findOneAndUpdate({ _id: userId }, { $push: { orders: order } })
+    .then(() => res.status(200).json({ message: "data updated", order: order }))
+    .catch((error) => res.status(500).json({ error }));
+};
+
+const readAllOrdersAdmin = (
+  req: Request & { userId?: string },
+  res: Response,
+  next: NextFunction
+) => {
+  // User.aggregate([
+  //   {
+  //     $project: {
+  //       result: { $sortArray: { input: "$orders", sortBy: { date: -1 } } },
+  //     },
+  //   },
+  // ])
+  User.aggregate([
+    {
+      $unwind: "$orders",
+    },
+    {
+      $sort: {"orders.date": -1}
+    }
+  ])
+    .then((orders) => res.status(200).json(orders))
+    .catch((error) => res.status(500).json({ error }));
+  // return User.findOne({ _id: userId },{orders:1, _id:0})
 };
 
 export default {
@@ -117,4 +205,7 @@ export default {
   addToCart,
   readAllCustomShirts,
   removeFromCart,
+  readAllOrders,
+  addToOrders,
+  readAllOrdersAdmin,
 };

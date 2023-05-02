@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, deleteUser } from "firebase/auth";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../auth/firebase";
@@ -10,7 +10,8 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const api = "/api/users/create";
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -18,16 +19,25 @@ export default function Signup() {
         try {
           const response = fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
             method: "POST",
-            body:JSON.stringify({_id: user.uid}),
+            body: JSON.stringify({ _id: user.uid, email }),
             headers: {
               "Content-Type": "application/json",
             },
           });
+          setError("");
         } catch (error) {
-          console.log(error);
+          if (auth.currentUser)
+            deleteUser(auth.currentUser)
+              .then(() =>
+                setError("Si è verificato un errore imprevisto, riprova")
+              )
+              .catch(() =>
+                setError(
+                  "Errore nella registrazione, contatta un amministratore"
+                )
+              );
         }
         console.log(user);
-        setError('');
       })
       .catch((error) => {
         setError(error.message);
@@ -39,7 +49,10 @@ export default function Signup() {
         <h1 className="text-3xl">Camiceria</h1>
         <h1 className="text-xl">Crea il tuo account</h1>
       </div>
-      <form className="bg-slate border-2 border-slate-900 p-4 w-3/4 mx-auto rounded-md mt-12 bg-cyan-600">
+      <form
+        onSubmit={(e) => handleSubmit(e)}
+        className="bg-slate border-2 border-slate-900 p-4 w-3/4 mx-auto rounded-md mt-12 bg-cyan-600"
+      >
         <p>E-mail:</p>
         <input
           className="w-full"
@@ -58,15 +71,16 @@ export default function Signup() {
         <div className="flex justify-center items-center mt-10">
           <button
             className="border-2 w-1/2 bg-white text-slate-900 rounded-md"
-            type="button"
-            onClick={() => handleSubmit()}
+            type="submit"
           >
             Registrati
           </button>
         </div>
         <p className="mt-10">
           Hai già un account?
-          <Link to="/accedi" className="underline underline-offset-1">Log In</Link>
+          <Link to="/accedi" className="underline underline-offset-1">
+            Log In
+          </Link>
         </p>
       </form>
       {error !== "" ? (
