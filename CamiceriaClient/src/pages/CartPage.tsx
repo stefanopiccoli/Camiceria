@@ -42,23 +42,7 @@ export default function CartPage() {
     setPrice(articles.length * 30.0);
   }, [token, articles.length]);
 
-  const handleAddToOrders = async () => {
-    const api = "/api/users/order/create";
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({ articles: articles }),
-      });
-
-      let result = await response.json();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
 
   return (
     <>
@@ -143,7 +127,6 @@ export default function CartPage() {
           <p>Totale</p>
           <p>{price} &euro;</p>
         </div>
-        {/* onClick={()=>handleAddToOrders()} */}
         <button className="bg-green-900 text-white h-3/4 w-[6rem] justify-self-end">
           <Link to="/ordine">Ordina</Link>
         </button>

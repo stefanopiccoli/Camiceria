@@ -10,8 +10,28 @@ import ManageArticles, { ManageCollars, ManageCuffs, ManageFabrics } from "./pag
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import OrderForm from "./pages/OrderForm";
+import { userStore } from "./store/User";
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./auth/firebase";
+import Profile from "./pages/Profile";
 
 function App() {
+  const setUser = userStore((store)=> store.setUser);
+  const setToken = userStore((store)=> store.setToken);
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        user.getIdToken().then((token)=>{
+          setToken(token);
+        })
+      } else {
+        setUser(null);
+        setToken(null)
+      }
+    });
+  }, []);
   return (
     <BrowserRouter>
     <NavigationBar></NavigationBar>
@@ -24,6 +44,7 @@ function App() {
       <Route path="riepilogo" element={<Summary />} />
       <Route path="carrello" element={<CartPage />} />
       <Route path="ordine" element={<OrderForm/>}></Route>
+      <Route path="profilo" element={<Profile/>}></Route>
       <Route path="gestione-articoli" element={<ManageArticles />} />
       <Route path="gestione-articoli/colletti" element={<ManageCollars />}></Route>
       <Route path="gestione-articoli/tessuti" element={<ManageFabrics />}></Route>

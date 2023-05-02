@@ -71,6 +71,17 @@ export interface Shirt {
   price: number;
 }
 
+export interface Order {
+  _id: string;
+  date: Date;
+  articles: {
+    customShirts: CustomShirt[];
+  };
+  state: "pending" | "paid" | "delivered" | "canceled";
+  price: number;
+  address: string;
+}
+
 export interface User {
   user: FirebaseUser | null;
   token: string | null;

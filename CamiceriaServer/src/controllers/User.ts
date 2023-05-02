@@ -121,8 +121,8 @@ const readAllOrders = (req: Request & { userId?: string }, res: Response, next: 
   if (!userId)
   return res.status(401).json({message: "Unauthorized"})
 
-  return User.findOne({ _id: userId })
-    .then((customShirts) => res.status(200).json(customShirts))
+  return User.findOne({ _id: userId },{orders:1, _id:0})
+    .then((orders) => res.status(200).json(orders))
     .catch((error) => res.status(500).json({ error }));
 }
 
@@ -138,7 +138,7 @@ const addToOrders = (req: Request & { userId?: string }, res: Response, next: Ne
 
   const order : IOrder = {
     _id: new mongoose.Types.ObjectId(),
-    articles: articles,
+    articles: {customShirts: articles},
     date: new Date,
     state: "pending",
     address: address,

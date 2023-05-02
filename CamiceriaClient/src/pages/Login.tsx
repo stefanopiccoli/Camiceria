@@ -49,7 +49,7 @@ export default function Login() {
     <div className="pt-16">
       {user ? (
         <div>
-          {user.email}{" "}
+          {user.email}{user.emailVerified}
           <div
             onClick={() =>
               signOut(auth)
