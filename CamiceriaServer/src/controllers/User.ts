@@ -66,7 +66,7 @@ const deleteUser = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const getRoleUser = (req: Request, res: Response, next: NextFunction) => {
-  return res.status(200).json({admin:true});
+  return res.status(200).json({ admin: true });
 };
 
 // CART
@@ -124,6 +124,26 @@ const removeFromCart = (
       console.log(error);
     });
 };
+const removeAllFromCart = (
+  req: Request & { userId?: string },
+  res: Response,
+  next: NextFunction
+) => {
+  const itemId = req.params.id;
+  const userId = req.userId;
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+  User.updateOne(
+    { _id: userId },
+    { $set: { "cart.customShirts": [] } }
+  )
+
+    .then((ris) => res.status(200).json({ message: "updated", ris }))
+    .catch((error) => {
+      res.status(500).send(error);
+      console.log(error);
+    });
+};
 
 //ORDERS
 
@@ -159,8 +179,13 @@ const addToOrders = (
 
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
-  const { articles, shipment, price } = req.body;
+  const { articles, shipment} = req.body;
 
+  if (articles.length <= 0)
+    return res.status(500).json({message: "Empty order"})
+
+  const price = (articles.length * 30);
+  
   const order: IOrder = {
     _id: new mongoose.Types.ObjectId(),
     articles: { customShirts: articles },
@@ -192,12 +217,26 @@ const readAllOrdersAdmin = (
       $unwind: "$orders",
     },
     {
-      $sort: {"orders.date": -1}
-    }
+      $sort: { "orders.date": -1 },
+    },
   ])
     .then((orders) => res.status(200).json(orders))
     .catch((error) => res.status(500).json({ error }));
   // return User.findOne({ _id: userId },{orders:1, _id:0})
+};
+
+const updateOrderAdmin = (
+  req: Request & { userId?: string },
+  res: Response,
+  next: NextFunction
+) => {
+  const orderId = req.params.id;
+  const { status } = req.body;
+  
+  
+  return User.updateOne({"orders._id":  orderId},{ "$set":  { "orders.$.state": status}})
+    .then((order) => res.status(201).json(order))
+    .catch((error) => res.status(500).json({ message: error }));
 };
 
 export default {
@@ -209,8 +248,10 @@ export default {
   addToCart,
   readAllCustomShirts,
   removeFromCart,
+  removeAllFromCart,
   readAllOrders,
   addToOrders,
   getRoleUser,
   readAllOrdersAdmin,
+  updateOrderAdmin,
 };

@@ -673,7 +673,7 @@ export function ManageOrders() {
   const token = userStore((store) => store.token);
   const admin = userStore((store) => store.admin);
   useEffect(() => {
-    token && admin ? getData("/api/users/order/all") : setShowModal(true); //TODO: Gestione null
+    token && admin ? getData("/api/users/order/all") : setShowModal(true); 
   }, [token, admin]);
 
   // MODAL
@@ -683,6 +683,27 @@ export function ManageOrders() {
     setShowModal(show);
     navigate("/");
   };
+
+  const handleUpdate = async (orderId : String, status : Order["state"]) =>{
+    const api = '/api/users/order/update/' +orderId
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: "Bearer " + token,
+        },
+        body:JSON.stringify({status})
+      });
+      console.log(response);
+      
+      let result = await response.json();
+      console.log(result);
+      getData("/api/users/order/all");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const renderState = (state: Order["state"]) => {
     switch (state) {
@@ -745,9 +766,16 @@ export function ManageOrders() {
           <div key={item.orders._id} className="border bg-zinc-400 w-full my-4">
             <details className="bg-white p-2 border-2 mx-auto overflow-hidden open:!max-h-[400px]">
               <summary className="cursor-pointer marker:text-transparent grid grid-flow-col">
-                {renderState(item.orders.state)}
+                {/* {renderState(item.orders.state)} */}
+                <select className="w-3/4" defaultValue={item.orders.state} onChange={(e)=> handleUpdate(item.orders._id, e.target.value as Order["state"])} name="status">
+                  <option value="pending">In elaborazione</option>
+                  <option value="shipped">Spedito</option>
+                  <option value="delivered">Consegnato</option>
+                  <option value="canceled">Cancellato</option>
+                </select>
                 <p>{item.email}</p>
                 <p>{item.orders.price.toFixed(2)} &euro;</p>
+                {/* <button onClick={()=>handleUpdate(item.orders._id,item._id,item.orders.state)}>send</button> */}
               </summary>
 
               <hr className="my-2 scale-x-150" />

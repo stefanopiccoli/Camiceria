@@ -16,6 +16,7 @@ router.use(decodeToken);
 router.patch('/addToCart/',controller.addToCart);
 router.get('/cart/customShirts/', controller.readAllCustomShirts);
 router.patch('/cart/remove/:id', controller.removeFromCart);
+router.patch('/cart/removeAll', controller.removeAllFromCart);
 // ORDER
 router.get('/order/',controller.readAllOrders);
 router.post('/order/create',controller.addToOrders);
@@ -24,5 +25,6 @@ router.get('/order/:idOrder');
 router.use(adminCheck); //ADMIN 
 router.get('/getRole',controller.getRoleUser);
 router.get('/order/all', controller.readAllOrdersAdmin);
+router.patch('/order/update/:id', controller.updateOrderAdmin);
 
 export default router;

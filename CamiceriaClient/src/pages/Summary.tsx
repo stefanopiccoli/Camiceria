@@ -44,8 +44,9 @@ export default function Summary() {
         <h1 className="text-xl">RIEPILOGO</h1>
       </div>
       <div className="pt-28 p-4">
-        <div>
-          <img className="w-24" src={colletto} alt="" />
+        <div className="grid grid-cols-2 gap-y-2">
+
+          <img className="w-24" src={collar.imageUrl} alt="" />
           <div>
             <span>{collar.name}</span>
             <br />
@@ -53,30 +54,30 @@ export default function Summary() {
               {collar.buttons} {collar.buttons === 1 ? "bottone" : "bottoni"}
             </span>
           </div>
-          <img className="w-24" src={tessuto} alt="" />
+          <img className="w-24" src={fabric.imageUrl} alt="" />
           <div>
             <span>{fabric.name}</span>
           </div>
-          <img className="w-24" src={polsino} alt="" />
+          <img className="w-24" src={cuff.imageUrl} alt="" />
           <div>
             <span>{cuff.name}</span>
           </div>
-          <div>
-            <span>Ricami: </span>{" "}
+          <div className="pt-5">
+            <span>Ricami </span>
             {sign.do === false ? (
-              <span>
-                <b>No</b>
-              </span>
+              <p>
+                <p className="font-bold">No</p>
+              </p>
             ) : (
               <>
-                <span>
+                <p>
                   {sign.text} ({sign.font})
-                </span>
+                </p>
               </>
             )}
           </div>
-          <div>
-            <h3 className="text-center">Misure</h3>
+          <div className="pt-5">
+            <h3>Misure</h3>
             <div className="grid grid-cols-2 gap-2">
               <span>Collo:</span>
               <span>{measure.neck} cm</span>

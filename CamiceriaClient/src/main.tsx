@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./auth/firebase";
 import Profile from "./pages/Profile";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   const setUser = userStore((store)=> store.setUser);
@@ -26,7 +27,6 @@ function App() {
         setUser(user);
         user.getIdToken().then(async (token)=>{
           setToken(token);
-          console.log("Fatto");
           setAdmin();
           
         })
@@ -41,7 +41,6 @@ function App() {
     <NavigationBar></NavigationBar>
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="ciaoo" element={<Home />} />
       <Route path="registrati" element={<Signup />} />
       <Route path="accedi" element={<Login />} />
       <Route path="camicie-personalizzate" element={<ShirtConfiguration />} />
@@ -54,6 +53,7 @@ function App() {
       <Route path="gestione-articoli/tessuti" element={<ManageFabrics />}></Route>
       <Route path="gestione-articoli/polsini" element={<ManageCuffs />}></Route>
       <Route path="gestione-articoli/ordini" element={<ManageOrders />}></Route>
+      <Route path="*" element={<PageNotFound/>}></Route>
     </Routes>
   </BrowserRouter>
   )

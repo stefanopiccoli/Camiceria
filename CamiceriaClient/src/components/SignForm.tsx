@@ -5,7 +5,6 @@ import { selectionStore } from "../store/Selection";
 export default function SignForm() {
   const sign = selectionStore((store) => store.sign);
   const updateSign = selectionStore((store) => store.updateSign);
-  console.log(sign);
 
   return (
     <>

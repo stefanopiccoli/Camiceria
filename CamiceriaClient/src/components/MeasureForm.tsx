@@ -6,7 +6,6 @@ export default function MeasureForm() {
 
   const measure = selectionStore(store=>store.measure)
   const updateMeasure = selectionStore(store=>store.updateMeasure);  
-  console.log(measure);
   
   
   return (

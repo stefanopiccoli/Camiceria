@@ -23,7 +23,6 @@ export default function Login() {
     await signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log(user);
         setError("");
         // if (redirect)
         //   navigate(redirect);
