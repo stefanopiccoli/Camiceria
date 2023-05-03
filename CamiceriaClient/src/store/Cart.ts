@@ -1,8 +1,5 @@
 import { create } from "zustand";
-import {
-  Cart,
-  CustomShirt,
-} from "../interfaces/interfaces";
+import { Cart, CustomShirt } from "../interfaces/interfaces";
 import { mountStoreDevtool } from "simple-zustand-devtools";
 import { userStore } from "./User";
 
@@ -10,6 +7,7 @@ export interface CartActions {
   refreshCustomShirts: () => void;
   addCustomShirt: (customShirt: CustomShirt) => void;
   removeCustomShirt: (itemId: string) => void;
+  clearCart: () => void;
 }
 
 export const cartStore = create<Cart & CartActions>((set, get) => ({
@@ -20,33 +18,27 @@ export const cartStore = create<Cart & CartActions>((set, get) => ({
     try {
       const api = "/api/users/cart/customShirts";
       const token = userStore.getState().token;
-      
-      const response = await fetch(
-        `${import.meta.env.VITE_API_HOST}${api}/`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: "Bearer " + token,
-          },
-        }
-      );
+
+      const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: "Bearer " + token,
+        },
+      });
 
       let result = await response.json();
       const { cart } = result;
       console.log(result);
-      if (cart)
-      set(() => ({ customShirts: cart.customShirts }));
-      else
-      set(() => ({ customShirts: [] }));
-
+      if (cart) set(() => ({ customShirts: cart.customShirts }));
+      else set(() => ({ customShirts: [] }));
     } catch (error) {
       console.log(error);
     }
   },
 
   addCustomShirt: async (customShirt: CustomShirt) => {
-    const token = userStore.getState().token;    
+    const token = userStore.getState().token;
     //Aggiunge nel carrello di userId una camicia personalizzata
     try {
       const api = "/api/users/addToCart";
@@ -81,7 +73,23 @@ export const cartStore = create<Cart & CartActions>((set, get) => ({
         headers: {
           "Content-Type": "application/json",
           authorization: "Bearer " + token,
-
+        },
+      });
+      console.log(response);
+      get().refreshCustomShirts();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  clearCart: async () => {
+    try {
+      const token = userStore.getState().token;
+      const api = "/api/users/cart/removeAll/";
+      const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: "Bearer " + token,
         },
       });
       console.log(response);
