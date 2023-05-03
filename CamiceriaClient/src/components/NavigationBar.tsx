@@ -10,6 +10,7 @@ function NavigationBar() {
   const user = userStore((store) => store.user);
   const setUser = userStore((store) => store.setUser);
   const setToken = userStore((store) => store.setToken);
+  const setAdmin = userStore((store) => store.setAdmin);
   const refreshCart = cartStore((store) => store.refreshCustomShirts);
 
   const handleLogOut = () => {
@@ -18,6 +19,7 @@ function NavigationBar() {
         console.log("Signed out");
         setUser(null);
         setToken(null);
+        setAdmin();
         setMenu("closed");
         refreshCart();
       })

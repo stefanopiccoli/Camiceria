@@ -19,12 +19,16 @@ import Profile from "./pages/Profile";
 function App() {
   const setUser = userStore((store)=> store.setUser);
   const setToken = userStore((store)=> store.setToken);
+  const setAdmin = userStore((store)=> store.setAdmin);
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
-        user.getIdToken().then((token)=>{
+        user.getIdToken().then(async (token)=>{
           setToken(token);
+          console.log("Fatto");
+          setAdmin();
+          
         })
       } else {
         setUser(null);

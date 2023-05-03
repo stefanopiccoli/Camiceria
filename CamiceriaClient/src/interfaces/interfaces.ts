@@ -91,6 +91,7 @@ export interface Order {
 export interface User {
   user: FirebaseUser | null;
   token: string | null;
+  admin: boolean;
 }
 
 export interface UserMDB {

@@ -1,11 +1,20 @@
 import colletto from "../assets/images/collar.webp";
 import tessuto from "../assets/images/fabric.webp";
 import polsino from "../assets/images/cuff.webp";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import ordine from "../assets/images/order.webp";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Collar, Cuff, Fabric, Order, User, UserMDB } from "../interfaces/interfaces";
+import {
+  Collar,
+  Cuff,
+  Fabric,
+  Order,
+  User,
+  UserMDB,
+} from "../interfaces/interfaces";
 import Loading from "../components/Loading";
 import { userStore } from "../store/User";
+import Modal from "../components/Modal";
 
 export default function ManageArticles() {
   const location = useLocation();
@@ -30,6 +39,12 @@ export default function ManageArticles() {
             <p className="text-center">Polsini</p>
           </div>
         </Link>
+        <Link to="ordini">
+          <div className="border-2">
+            <img src={ordine} className="h-[152px] object-cover" alt="" />
+            <p className="text-center">Ordini</p>
+          </div>
+        </Link>
       </div>
     </>
   );
@@ -37,6 +52,22 @@ export default function ManageArticles() {
 
 export function ManageCollars() {
   const token = userStore((store) => store.token);
+  const admin = userStore((store) => store.admin);
+  useEffect(() => {
+    {
+      admin && token
+        ? getData("/api/collars/get", setCollars)
+        : setShowModal(true);
+    }
+  }, [token, admin]);
+
+  // MODAL
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+  const handleModal = (show: boolean) => {
+    setShowModal(show);
+    navigate("/");
+  };
 
   const [loading, setLoading] = useState(true);
   const [collars, setCollars] = useState<Collar[]>([]);
@@ -132,7 +163,7 @@ export function ManageCollars() {
       console.log(error);
     }
   };
-  return (
+  return admin ? (
     <>
       <div className="fixed top-14 h-12 w-full bg-white px-2 border-bottom border-2 flex items-center justify-center">
         <h1 className="text-xl">Colletti</h1>
@@ -240,11 +271,31 @@ export function ManageCollars() {
         </div>
       </div>
     </>
+  ) : (
+    <Modal show={showModal} handleModal={handleModal} title={"Accesso negato"}>
+      Non hai i permessi per accedere a questa sezione
+    </Modal>
   );
 }
 
 export function ManageFabrics() {
   const token = userStore((store) => store.token);
+  const admin = userStore((store) => store.admin);
+  useEffect(() => {
+    {
+      admin && token
+        ? getData("/api/fabrics/get", setFabrics)
+        : setShowModal(true);
+    }
+  }, [token, admin]);
+
+  // MODAL
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+  const handleModal = (show: boolean) => {
+    setShowModal(show);
+    navigate("/");
+  };
 
   const [loading, setLoading] = useState(true);
   const [fabrics, setFabrics] = useState<Fabric[]>([]);
@@ -338,7 +389,7 @@ export function ManageFabrics() {
       console.log(error);
     }
   };
-  return (
+  return admin ? (
     <>
       <div className="fixed top-14 h-12 w-full bg-white px-2 border-bottom border-2 flex items-center justify-center">
         <h1 className="text-xl">Tessuti</h1>
@@ -417,11 +468,29 @@ export function ManageFabrics() {
         </div>
       </div>
     </>
+  ) : (
+    <Modal show={showModal} handleModal={handleModal} title={"Accesso negato"}>
+      Non hai i permessi per accedere a questa sezione
+    </Modal>
   );
 }
 
 export function ManageCuffs() {
   const token = userStore((store) => store.token);
+  const admin = userStore((store) => store.admin);
+  useEffect(() => {
+    {
+      admin && token ? getData("/api/cuffs/get", setCuffs) : setShowModal(true);
+    }
+  }, [token, admin]);
+
+  // MODAL
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+  const handleModal = (show: boolean) => {
+    setShowModal(show);
+    navigate("/");
+  };
 
   const [loading, setLoading] = useState(true);
   const [cuffs, setCuffs] = useState<Cuff[]>([]);
@@ -452,9 +521,6 @@ export function ManageCuffs() {
       console.log(error);
     }
   };
-  useEffect(() => {
-    getData("/api/cuffs/get", setCuffs);
-  }, []);
 
   const handleCreate = async () => {
     const api = "/api/cuffs/create";
@@ -487,7 +553,6 @@ export function ManageCuffs() {
         headers: {
           "Content-Type": "application/json",
           authorization: "Bearer " + token,
-
         },
       });
 
@@ -507,7 +572,6 @@ export function ManageCuffs() {
         headers: {
           "Content-Type": "application/json",
           authorization: "Bearer " + token,
-
         },
       });
       let result = await response.json();
@@ -517,7 +581,7 @@ export function ManageCuffs() {
       console.log(error);
     }
   };
-  return (
+  return admin ? (
     <>
       <div className="fixed top-14 h-12 w-full bg-white px-2 border-bottom border-2 flex items-center justify-center">
         <h1 className="text-xl">Polsini</h1>
@@ -596,14 +660,29 @@ export function ManageCuffs() {
         </div>
       </div>
     </>
+  ) : (
+    <Modal show={showModal} handleModal={handleModal} title={"Accesso negato"}>
+      Non hai i permessi per accedere a questa sezione
+    </Modal>
   );
 }
 
-
-
 export function ManageOrders() {
   const [users, setUsers] = useState<UserMDB[]>([]);
-  const token = userStore((store)=> store.token);
+
+  const token = userStore((store) => store.token);
+  const admin = userStore((store) => store.admin);
+  useEffect(() => {
+    token && admin ? getData("/api/users/order/all") : setShowModal(true); //TODO: Gestione null
+  }, [token, admin]);
+
+  // MODAL
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+  const handleModal = (show: boolean) => {
+    setShowModal(show);
+    navigate("/");
+  };
 
   const renderState = (state: Order["state"]) => {
     switch (state) {
@@ -641,9 +720,7 @@ export function ManageOrders() {
     }
   };
 
-  const getData = async (
-    api: string,
-  ) => {
+  const getData = async (api: string) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
         method: "GET",
@@ -660,59 +737,72 @@ export function ManageOrders() {
       console.log(error);
     }
   };
-  useEffect(() => {
-    token ? getData("/api/users/order/all") : null;
-  }, [token]);
 
   return (
     <div className="pt-28">
-      {users?.map((item,index)=>(
-        <div key={item.orders._id} className="border bg-zinc-400 w-full my-4">
-        <details className="bg-white p-2 border-2 mx-auto overflow-hidden open:!max-h-[400px]">
-          <summary className="cursor-pointer marker:text-transparent grid grid-flow-col">
-            {renderState(item.orders.state)}
-            <p>{item.email}</p>
-            <p>{item.orders.price.toFixed(2)} &euro;</p>
-          </summary>
+      {admin ? (
+        users?.map((item, index) => (
+          <div key={item.orders._id} className="border bg-zinc-400 w-full my-4">
+            <details className="bg-white p-2 border-2 mx-auto overflow-hidden open:!max-h-[400px]">
+              <summary className="cursor-pointer marker:text-transparent grid grid-flow-col">
+                {renderState(item.orders.state)}
+                <p>{item.email}</p>
+                <p>{item.orders.price.toFixed(2)} &euro;</p>
+              </summary>
 
-          <hr className="my-2 scale-x-150" />
+              <hr className="my-2 scale-x-150" />
 
-          <div className="text -m-4 -mt-2 p-4 bg-gray-50">
-            <div className="grid grid-cols-2">
-              <div>
-                <p className="text-sm italic">Data ordine:</p>
-                <p>{new Date(item.orders.date).toLocaleString()}</p>
-              </div>
-              <div>
-                <p className="text-sm italic">Spedizione:</p>
-                <p>{item.orders.shipment.name}</p>
-                <p>{item.orders.shipment.address}</p>
-                <p>
-                  {item.orders.shipment.city}({item.orders.shipment.province})
-                </p>
-                <p>{item.orders.shipment.cap}</p>
-              </div>
-              <div className="col-span-2 border-2 p-1">
-                <p className="text-sm italic">Articoli:</p>
-                <div className="h-44 overflow-y-scroll">
-                  {item.orders.articles.customShirts.map((item, index) => (
-                    <div key={item._id} className="grid grid-cols-12 gap-x-2 p-2">
-                      <p className="w-3">{index+1}</p>
-                      <img className="w-32 col-span-5" src={item.fabric.imageUrl} />
-                      <div className="col-span-6">
-                        <p>{item.collar.name}</p>
-                        <p>{item.fabric.name}</p>
-                      </div>
+              <div className="text -m-4 -mt-2 p-4 bg-gray-50">
+                <div className="grid grid-cols-2">
+                  <div>
+                    <p className="text-sm italic">Data ordine:</p>
+                    <p>{new Date(item.orders.date).toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm italic">Spedizione:</p>
+                    <p>{item.orders.shipment.name}</p>
+                    <p>{item.orders.shipment.address}</p>
+                    <p>
+                      {item.orders.shipment.city}(
+                      {item.orders.shipment.province})
+                    </p>
+                    <p>{item.orders.shipment.cap}</p>
+                  </div>
+                  <div className="col-span-2 border-2 p-1">
+                    <p className="text-sm italic">Articoli:</p>
+                    <div className="h-44 overflow-y-scroll">
+                      {item.orders.articles.customShirts.map((item, index) => (
+                        <div
+                          key={item._id}
+                          className="grid grid-cols-12 gap-x-2 p-2"
+                        >
+                          <p className="w-3">{index + 1}</p>
+                          <img
+                            className="w-32 col-span-5"
+                            src={item.fabric.imageUrl}
+                          />
+                          <div className="col-span-6">
+                            <p>{item.collar.name}</p>
+                            <p>{item.fabric.name}</p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            </details>
           </div>
-        </details>
-      </div>
-      ))}
+        ))
+      ) : (
+        <Modal
+          show={showModal}
+          handleModal={handleModal}
+          title={"Accesso negato"}
+        >
+          Non hai i permessi per accedere a questa sezione
+        </Modal>
+      )}
     </div>
-  )
+  );
 }
-
