@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { userStore } from "../store/User";
 import { Order } from "../interfaces/interfaces";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   const token = userStore((store) => store.token);
@@ -63,13 +64,14 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    token ? getOrders() : null;
+    token ? getOrders() : setOrders([]);;
   }, [token]);
 
   return (
+
     <div className="pt-20 p-4">
       <h1 className="text-2xl">I miei ordini</h1>
-      {orders?.map((item, index) => (
+      {token ? orders?.map((item, index) => (
         <div key={item._id} className="border bg-zinc-400 w-full my-4">
           <details className="bg-white p-2 border-2 mx-auto overflow-hidden open:!max-h-[400px]">
             <summary className="cursor-pointer marker:text-transparent grid grid-flow-col">
@@ -84,7 +86,8 @@ export default function Profile() {
               <div className="grid grid-cols-2">
                 <div>
                   <p className="text-sm italic">Data ordine:</p>
-                  <p>{new Date(item.date).toLocaleString()}</p>
+                  <p>{new Date(item.date).toLocaleDateString()}</p>
+                  <p>{new Date(item.date).toLocaleTimeString()}</p>
                 </div>
                 <div>
                   <p className="text-sm italic">Spedizione:</p>
@@ -114,7 +117,20 @@ export default function Profile() {
             </div>
           </details>
         </div>
-      ))}
+      )) : <div className="flex fixed h-screen w-full left-0 right-0 top-0 bottom-0 items-center justify-center">
+      <p>
+        {" "}
+        <Link
+          to="/accedi"
+          className="underline underline-offset-1 text-slate-900"
+        >
+          Accedi
+        </Link>{" "}
+        per visualizzare i tuoi ordini
+      </p>
+    </div> }
+      
     </div>
   );
 }
+// TODO: -Modifica stato ordine admin -UI Carrello -Ordina reset carrello -Ordine non vuoto -Limiti dei form

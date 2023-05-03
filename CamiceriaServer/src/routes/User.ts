@@ -21,7 +21,8 @@ router.get('/order/',controller.readAllOrders);
 router.post('/order/create',controller.addToOrders);
 router.get('/order/:idOrder');
 
-router.use(adminCheck);
+router.use(adminCheck); //ADMIN 
+router.get('/getRole',controller.getRoleUser);
 router.get('/order/all', controller.readAllOrdersAdmin);
 
 export default router;
