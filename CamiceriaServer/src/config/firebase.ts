@@ -1,5 +1,5 @@
 import admin from "firebase-admin";
-import serviceAccount from '../config/SDKAdminKey.json' assert {type: "json"};
+import serviceAccount from './SDKAdminKey.json' assert {type: "json"};
 import dotenv from "dotenv";
 
 
