@@ -14,29 +14,12 @@ export default function CartPage() {
   const removeCustomShirt = cartStore((store) => store.removeCustomShirt);
   const refreshCart = cartStore((store) => store.refreshCustomShirts);
   const [price, setPrice] = useState(0);
-  const setUser = userStore((store) => store.setUser);
-  const setToken = userStore((store) => store.setToken);
-  console.log("oj");
-
+  
   const handleRemoveFromCart = (itemId?: string) => {
     if (typeof itemId !== "undefined") {
       removeCustomShirt(itemId);
     }
   };
-
-  // useEffect(() => {
-  //   onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       setUser(user);
-  //       user.getIdToken().then((token) => {
-  //         setToken(token);
-  //       });
-  //     } else {
-  //       setUser(null);
-  //       setToken(null);
-  //     }
-  //   });
-  // });
 
   useEffect(() => {
     token ? refreshCart() : null;
