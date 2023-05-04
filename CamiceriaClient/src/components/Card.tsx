@@ -36,7 +36,7 @@ export function FabricCard({ fabric }: { fabric: Fabric }) {
   return (
     <div
       className={
-        "h-60 " +
+        "h-56 " +
         (fabric._id === selection.fabric._id
           ? "border-4 border-slate-700"
           : "border")

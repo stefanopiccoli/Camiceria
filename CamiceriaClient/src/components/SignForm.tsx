@@ -8,24 +8,26 @@ export default function SignForm() {
 
   return (
     <>
-      <div className="p-5">
-        <div className="text-center pb-5">
+      <div className="p-5 xsm:px-0 xsm:container xsm:mx-auto">
+        <div className="pb-5 xsm:flex justify-center">
           <img src={iniziali} className="w-[35rem]" alt="" />
         </div>
-        <h5>Rendi unica la tua camicia, fai ricamare le tue iniziali!</h5>
-        <form>
+        <h5 className="xsm:text-center">
+          Rendi unica la tua camicia, fai ricamare le tue iniziali!
+        </h5>
+        <form className="xsm:max-w-xl xsm:mx-auto">
           <input
             type="text"
             maxLength={4}
             minLength={1}
-            value={sign.do ? sign.text : ''}
+            value={sign.do ? sign.text : ""}
             className="w-full h-10 my-4 text-center"
             onChange={(e) => updateSign({ text: e.target.value })}
             onClick={() => updateSign({ do: true })}
           />
           <br />
           {sign.do ? (
-            <>
+            <div className="xsm:flex xsm:justify-center">
               <input
                 type="radio"
                 name="sign"
@@ -35,6 +37,7 @@ export default function SignForm() {
               />
               Corsivo
               <input
+                className="ml-10"
                 type="radio"
                 name="sign"
                 value="capitalized"
@@ -46,22 +49,24 @@ export default function SignForm() {
                 }
               />
               Stampatello
-            </>
+            </div>
           ) : null}
           <br />
           <br />
-          <input
-            type="radio"
-            name="sign"
-            value="false"
-            checked={sign.do === false}
-            onChange={() =>
-              updateSign({
-                do: false,
-              })
-            }
-          />
-          No, grazie
+          <div className="xsm:flex xsm:justify-center">
+            <input
+              type="radio"
+              name="sign"
+              value="false"
+              checked={sign.do === false}
+              onChange={() =>
+                updateSign({
+                  do: false,
+                })
+              }
+            />
+            No, grazie
+          </div>
         </form>
       </div>
       <StepNavigationButton

@@ -768,7 +768,7 @@ export function ManageOrders() {
               <summary className="cursor-pointer marker:text-transparent grid grid-flow-col">
                 {/* {renderState(item.orders.state)} */}
                 <select className="w-3/4" defaultValue={item.orders.state} onChange={(e)=> handleUpdate(item.orders._id, e.target.value as Order["state"])} name="status">
-                  <option value="pending">In elaborazione</option>
+                  <option value="pending">In lavorazione</option>
                   <option value="shipped">Spedito</option>
                   <option value="delivered">Consegnato</option>
                   <option value="canceled">Cancellato</option>

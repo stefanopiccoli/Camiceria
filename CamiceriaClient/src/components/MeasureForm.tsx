@@ -10,9 +10,9 @@ export default function MeasureForm() {
   
   return (
     <>
-      <div id="measurebox">
+      <div id="measurebox" className="xsm:container xsm:mx-auto sm:grid sm:grid-cols-2">
         <img src={misure} />
-        <div className="grid grid-cols-2 px-4 gap-4 text-black">
+        <div className="grid grid-cols-2 px-4 gap-4 text-black xsm:flex xsm:flex-col">
           <div className="border border-dashed border-slate-800 bg-slate-400 p-2">
             <span>Collo</span>
             <br />

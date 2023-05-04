@@ -97,7 +97,7 @@ export function ShirtConfiguration() {
         <div>
           <div>
             <div
-              className="sticky top-14 h-16 w-full bg-white flex items-center gap-x-4 px-2 border-bottom border-2 overflow-x-scroll"
+              className="sticky top-14 h-16 w-full bg-white flex items-center gap-x-4 px-2 border-bottom border-2 overflow-x-scroll xsm:justify-evenly xsm:overflow-x-auto"
               id="steps"
             >
               <button onClick={() => selection.updateStep("collar")}>
@@ -208,9 +208,9 @@ export function CardsList({
     el = <Loading />;
   } else
     el = (
-      <div className="grid grid-cols-2 px-2">
+      <div className="grid grid-cols-2 px-2 gap-2 xsm:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 md:container md:mx-auto lg:grid-cols-7 xl:grid-cols-8 ">
         {list.map((item, index) => (
-          <div key={index} className="col m-2">
+          <div key={index}>
             {type === "collar" ? (
               <CollarCard key={item._id} collar={item} />
             ) : null}
@@ -250,42 +250,43 @@ export function StepNavigationButton({
     <>
       <div className="h-16"></div>
       <div
-        className="fixed grid grid-flow-col items-center border-t px-4 border-t-neutral-300 bottom-0 w-full h-16 bg-white "
-        id="buttons"
+        className="fixed border-t px-4 border-t-neutral-300 bottom-0 w-full h-16 bg-white"
       >
-        {typeof prev !== "undefined" ? (
-          <button
-            className="bg-red-900 text-white h-3/4 w-2/5"
-            style={{ width: "6rem" }}
-            onClick={() => {
-              updateStep(prev);
-            }}
-          >
-            Indietro
-          </button>
-        ) : null}
-        {typeof next !== "undefined" && next !== "summary" ? (
-          <button
-            className="bg-slate-900 text-white h-3/4 w-2/5 justify-self-end"
-            style={{ width: "6rem" }}
-            disabled={selector}
-            onClick={() => {
-              updateStep(next);
-            }}
-          >
-            Avanti
-          </button>
-        ) : null}
-        {next === "summary" ? (
-          <button
-            className="bg-green-900 text-white h-3/4 w-2/5 justify-self-end"
-            style={{ width: "6rem" }}
-            disabled={selector}
-            onClick={() => navigate("/riepilogo")}
-          >
-            Riepilogo
-          </button>
-        ) : null}
+        <div className="grid grid-flow-col items-center w-full h-full xsm:container xsm:mx-auto" id="buttons">
+          {typeof prev !== "undefined" ? (
+            <button
+              className="bg-red-900 text-white h-3/4 w-2/5"
+              style={{ width: "6rem" }}
+              onClick={() => {
+                updateStep(prev);
+              }}
+            >
+              Indietro
+            </button>
+          ) : null}
+          {typeof next !== "undefined" && next !== "summary" ? (
+            <button
+              className="bg-slate-900 text-white h-3/4 w-2/5 justify-self-end"
+              style={{ width: "6rem" }}
+              disabled={selector}
+              onClick={() => {
+                updateStep(next);
+              }}
+            >
+              Avanti
+            </button>
+          ) : null}
+          {next === "summary" ? (
+            <button
+              className="bg-green-900 text-white h-3/4 w-2/5 justify-self-end"
+              style={{ width: "6rem" }}
+              disabled={selector}
+              onClick={() => navigate("/riepilogo")}
+            >
+              Riepilogo
+            </button>
+          ) : null}
+        </div>
       </div>
     </>
   );
