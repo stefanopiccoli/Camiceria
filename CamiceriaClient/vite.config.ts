@@ -44,6 +44,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ["**/*"],
+        globIgnores: ["_redirects"],
         runtimeCaching: [
           {
             urlPattern: ({ url }) => {
