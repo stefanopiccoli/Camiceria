@@ -5,6 +5,7 @@ import { selectionStore } from "../store/Selection";
 import { useNavigate } from "react-router-dom";
 import { cartStore } from "../store/Cart";
 import { userStore } from "../store/User";
+import { useEffect } from "react";
 
 export default function Summary() {
   const navigate = useNavigate();
@@ -23,20 +24,28 @@ export default function Summary() {
 
   const handleAddToCart = () => {
     if (userId) {
-      addToCartCustomShirt(
-        {
-          collar: collar,
-          fabric: fabric,
-          cuff: cuff,
-          sign: sign,
-          measure: measure,
-        },
-      );
+      addToCartCustomShirt({
+        collar: collar,
+        fabric: fabric,
+        cuff: cuff,
+        sign: sign,
+        measure: measure,
+      });
       resetSelection();
       navigate("/carrello");
       // user ? refreshCart(user?.uid) : null;
+      new Notification("Articolo");
     }
   };
+
+  useEffect(() => {
+    if (!("Notification" in window)) {
+      console.log("This browser does not support desktop notification");
+    } else if (Notification.permission !== "denied") {
+      Notification.requestPermission().then((permission) => {
+      });
+    }
+  });
 
   return (
     <>
@@ -45,7 +54,6 @@ export default function Summary() {
       </div>
       <div className="pt-28 p-4">
         <div className="grid grid-cols-2 gap-y-2">
-
           <img className="w-24" src={collar.imageUrl} alt="" />
           <div>
             <span>{collar.name}</span>
