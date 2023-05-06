@@ -32,7 +32,7 @@ function NavigationBar() {
       <div className="fixed top-0 bg-slate-900 h-14 w-full z-30">
         <div className="container px-6 mx-auto h-full flex justify-between items-center">
           <i
-            className="fa text-2xl fa-bars text-white"
+            className="fa text-2xl fa-bars text-white cursor-pointer"
             aria-hidden="true"
             onClick={(e) => {
               setMenu("open");
@@ -57,11 +57,19 @@ function NavigationBar() {
         >
           <div className="h-full flex flex-col justify-between pb-28">
             <i
-              className="fa fa-times text-2xl text-white absolute right-4 top-2"
+              className="fa fa-times cursor-pointer text-2xl text-white absolute right-4 top-2"
               aria-hidden="true"
               onClick={() => setMenu("closed")}
             ></i>
             <div className="w-3/4 mt-28 flex flex-col gap-8 mx-auto ">
+              <Link
+                to="/"
+                onClick={() => setMenu("closed")}
+              >
+                <h3 className="text-center text-white text-2xl">
+                  Home
+                </h3>
+              </Link>
               <Link
                 to="/camicie-personalizzate"
                 onClick={() => setMenu("closed")}
@@ -88,7 +96,7 @@ function NavigationBar() {
               {user ? (
                 <div className="text-center text-white text-lg ">
                   {user.email}
-                  <p onClick={() => handleLogOut()} className="underline">
+                  <p onClick={() => handleLogOut()} className="underline cursor-pointer">
                     Logout
                   </p>
                 </div>

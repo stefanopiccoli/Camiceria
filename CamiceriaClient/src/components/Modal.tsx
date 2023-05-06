@@ -13,9 +13,9 @@ export default function Modal({
     <>
       {show ? (
         <>
-          <div className="flex h-screen top-0 px-4 justify-center items-center overflow-hidden fixed z-50">
+          <div className="flex w-full h-screen top-0 px-4 justify-center items-center overflow-hidden fixed z-50">
             {/*content*/}
-            <div className="border-0 rounded-md shadow-lg flex flex-col w-full bg-white">
+            <div className="border-0 rounded-md shadow-lg flex flex-col w-3/4 bg-white md:w-1/2 xl:w-1/4">
               {/*header*/}
               <div className="flex items-start justify-between px-2 py-4 mx-4 border-b border-solid border-slate-200 rounded-t">
                 <h3 className="text-2xl text-slate-900">{title}</h3>

@@ -9,10 +9,17 @@ export default function Signup() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const api = "/api/users/create";
+
+    if (password !== confirmPassword){
+      setError("Errore: Le password non coincidono");
+      return;
+    }
+
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -25,6 +32,7 @@ export default function Signup() {
             },
           });
           setError("");
+          navigate("/");
         } catch (error) {
           if (auth.currentUser)
             deleteUser(auth.currentUser)
@@ -51,7 +59,7 @@ export default function Signup() {
       </div>
       <form
         onSubmit={(e) => handleSubmit(e)}
-        className="bg-slate border-2 border-slate-900 p-4 w-3/4 mx-auto rounded-md mt-12 bg-cyan-600"
+        className="bg-slate border-2 border-slate-900 p-4 w-3/4 md:w-1/3 mx-auto rounded-md mt-12 bg-cyan-600"
       >
         <p>E-mail:</p>
         <input
@@ -66,6 +74,14 @@ export default function Signup() {
           className="w-full"
           type="password"
           onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <p className="mt-8">Conferma password:</p>
+
+        <input
+          className="w-full"
+          type="password"
+          onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
         <div className="flex justify-center items-center mt-10">

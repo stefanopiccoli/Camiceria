@@ -20,7 +20,8 @@ export default function ManageArticles() {
   const location = useLocation();
   return (
     <>
-      <div className="pt-20 grid grid-cols-2 gap-4 p-4">
+      <h1 className="mt-16 text-center text-3xl">Gestione</h1>
+      <div className="grid grid-cols-2 gap-4 p-4 sm:grid-cols-3 xsm:container xsm:mx-auto xsm:max-w-lg">
         <Link to="colletti">
           <div className="border-2">
             <img src={colletto} alt="" />
@@ -39,9 +40,9 @@ export default function ManageArticles() {
             <p className="text-center">Polsini</p>
           </div>
         </Link>
-        <Link to="ordini">
-          <div className="border-2">
-            <img src={ordine} className="h-[152px] object-cover" alt="" />
+        <Link to="ordini" className="h-full">
+          <div className="border-2 h-full">
+            <img src={ordine} alt="" />
             <p className="text-center">Ordini</p>
           </div>
         </Link>
@@ -673,7 +674,7 @@ export function ManageOrders() {
   const token = userStore((store) => store.token);
   const admin = userStore((store) => store.admin);
   useEffect(() => {
-    token && admin ? getData("/api/users/order/all") : setShowModal(true); 
+    token && admin ? getData("/api/users/order/all") : setShowModal(true);
   }, [token, admin]);
 
   // MODAL
@@ -684,8 +685,8 @@ export function ManageOrders() {
     navigate("/");
   };
 
-  const handleUpdate = async (orderId : String, status : Order["state"]) =>{
-    const api = '/api/users/order/update/' +orderId
+  const handleUpdate = async (orderId: String, status: Order["state"]) => {
+    const api = "/api/users/order/update/" + orderId;
     try {
       const response = await fetch(`${import.meta.env.VITE_API_HOST}${api}`, {
         method: "PATCH",
@@ -693,17 +694,17 @@ export function ManageOrders() {
           "Content-Type": "application/json",
           authorization: "Bearer " + token,
         },
-        body:JSON.stringify({status})
+        body: JSON.stringify({ status }),
       });
       console.log(response);
-      
+
       let result = await response.json();
       console.log(result);
       getData("/api/users/order/all");
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const renderState = (state: Order["state"]) => {
     switch (state) {
@@ -760,77 +761,102 @@ export function ManageOrders() {
   };
 
   return (
-    <div className="pt-28">
-      {admin ? (
-        users?.map((item, index) => (
-          <div key={item.orders._id} className="border bg-zinc-400 w-full my-4">
-            <details className="bg-white p-2 border-2 mx-auto overflow-hidden open:!max-h-[400px]">
-              <summary className="cursor-pointer marker:text-transparent grid grid-flow-col">
-                {/* {renderState(item.orders.state)} */}
-                <select className="w-3/4" defaultValue={item.orders.state} onChange={(e)=> handleUpdate(item.orders._id, e.target.value as Order["state"])} name="status">
-                  <option value="pending">In lavorazione</option>
-                  <option value="shipped">Spedito</option>
-                  <option value="delivered">Consegnato</option>
-                  <option value="canceled">Cancellato</option>
-                </select>
-                <p>{item.email}</p>
-                <p>{item.orders.price.toFixed(2)} &euro;</p>
-                {/* <button onClick={()=>handleUpdate(item.orders._id,item._id,item.orders.state)}>send</button> */}
-              </summary>
+    <div className={(admin ? "xsm:container xsm:mx-auto mt-20 p-4" : "")}>
+      <div>
+        <h1 className="text-2xl">Gestisci gli ordini</h1>
+        {admin ? (
+          users?.map((item, index) => (
+            <div
+              key={item.orders._id}
+              className="border bg-zinc-400 w-full my-4"
+            >
+              <details className="bg-white p-2 border-2 mx-auto overflow-hidden open:!max-h-[400px]">
+                <summary className="cursor-pointer marker:text-transparent grid grid-cols-5 gap-x-4 items-center">
+                  {/* {renderState(item.orders.state)} */}
+                  <select
+                    className="col-span-2 sm:col-span-1"
+                    defaultValue={item.orders.state}
+                    onChange={(e) =>
+                      handleUpdate(
+                        item.orders._id,
+                        e.target.value as Order["state"]
+                      )
+                    }
+                    name="status"
+                  >
+                    <option value="pending">In lavorazione</option>
+                    <option value="shipped">Spedito</option>
+                    <option value="delivered">Consegnato</option>
+                    <option value="canceled">Cancellato</option>
+                  </select>
+                  <p className="col-span-2 overflow-scroll sm:overflow-auto">
+                    {item.email}
+                  </p>
+                  <p className="hidden md:block md:whitespace-nowrap">
+                    {new Date(item.orders.date).toLocaleString()}
+                  </p>
+                  <p className="justify-self-end">
+                    {item.orders.price.toFixed(2)} &euro;
+                  </p>
+                  {/* <button onClick={()=>handleUpdate(item.orders._id,item._id,item.orders.state)}>send</button> */}
+                </summary>
 
-              <hr className="my-2 scale-x-150" />
+                <hr className="my-2 scale-x-150" />
 
-              <div className="text -m-4 -mt-2 p-4 bg-gray-50">
-                <div className="grid grid-cols-2">
-                  <div>
-                    <p className="text-sm italic">Data ordine:</p>
-                    <p>{new Date(item.orders.date).toLocaleString()}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm italic">Spedizione:</p>
-                    <p>{item.orders.shipment.name}</p>
-                    <p>{item.orders.shipment.address}</p>
-                    <p>
-                      {item.orders.shipment.city}(
-                      {item.orders.shipment.province})
-                    </p>
-                    <p>{item.orders.shipment.cap}</p>
-                  </div>
-                  <div className="col-span-2 border-2 p-1">
-                    <p className="text-sm italic">Articoli:</p>
-                    <div className="h-44 overflow-y-scroll">
-                      {item.orders.articles.customShirts.map((item, index) => (
-                        <div
-                          key={item._id}
-                          className="grid grid-cols-12 gap-x-2 p-2"
-                        >
-                          <p className="w-3">{index + 1}</p>
-                          <img
-                            className="w-32 col-span-5"
-                            src={item.fabric.imageUrl}
-                          />
-                          <div className="col-span-6">
-                            <p>{item.collar.name}</p>
-                            <p>{item.fabric.name}</p>
-                          </div>
-                        </div>
-                      ))}
+                <div className="text -m-4 -mt-2 p-4 bg-gray-50">
+                  <div className="grid grid-cols-2">
+                    <div>
+                      <p className="text-sm italic">Data ordine:</p>
+                      <p>{new Date(item.orders.date).toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm italic">Spedizione:</p>
+                      <p>{item.orders.shipment.name}</p>
+                      <p>{item.orders.shipment.address}</p>
+                      <p>
+                        {item.orders.shipment.city}(
+                        {item.orders.shipment.province})
+                      </p>
+                      <p>{item.orders.shipment.cap}</p>
+                    </div>
+                    <div className="col-span-2 border-2 p-1">
+                      <p className="text-sm italic">Articoli:</p>
+                      <div className="h-44 overflow-y-scroll">
+                        {item.orders.articles.customShirts.map(
+                          (item, index) => (
+                            <div
+                              key={item._id}
+                              className="grid grid-cols-12 gap-x-2 p-2"
+                            >
+                              <p className="w-3">{index + 1}</p>
+                              <img
+                                className="w-32 col-span-5"
+                                src={item.fabric.imageUrl}
+                              />
+                              <div className="col-span-6">
+                                <p>{item.collar.name}</p>
+                                <p>{item.fabric.name}</p>
+                              </div>
+                            </div>
+                          )
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </details>
-          </div>
-        ))
-      ) : (
-        <Modal
-          show={showModal}
-          handleModal={handleModal}
-          title={"Accesso negato"}
-        >
-          Non hai i permessi per accedere a questa sezione
-        </Modal>
-      )}
+              </details>
+            </div>
+          ))
+        ) : (
+          <Modal
+            show={showModal}
+            handleModal={handleModal}
+            title={"Accesso negato"}
+          >
+            Non hai i permessi per accedere a questa sezione
+          </Modal>
+        )}
+      </div>
     </div>
   );
 }

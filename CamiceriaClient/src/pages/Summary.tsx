@@ -1,6 +1,3 @@
-import colletto from "../assets/images/collar.webp";
-import tessuto from "../assets/images/fabric.webp";
-import polsino from "../assets/images/cuff.webp";
 import { selectionStore } from "../store/Selection";
 import { useNavigate } from "react-router-dom";
 import { cartStore } from "../store/Cart";
@@ -42,8 +39,7 @@ export default function Summary() {
     if (!("Notification" in window)) {
       console.log("This browser does not support desktop notification");
     } else if (Notification.permission !== "denied") {
-      Notification.requestPermission().then((permission) => {
-      });
+      Notification.requestPermission().then((permission) => {});
     }
   });
 
@@ -52,75 +48,78 @@ export default function Summary() {
       <div className="fixed top-14 h-12 w-full bg-white px-2 border-bottom border-2 flex items-center justify-center">
         <h1 className="text-xl">RIEPILOGO</h1>
       </div>
-      <div className="pt-28 p-4">
-        <div className="grid grid-cols-2 gap-y-2">
+      <div className="pt-28 p-4 container mx-auto bg-gray-100 max-w-lg">
+        <div className="grid grid-cols-2 gap-y-2 items-center">
           <img className="w-24" src={collar.imageUrl} alt="" />
           <div>
-            <span>{collar.name}</span>
+            <span className="text-2xl">{collar.name}</span>
             <br />
-            <span>
+            <span className="italic text-xl">
               {collar.buttons} {collar.buttons === 1 ? "bottone" : "bottoni"}
             </span>
           </div>
           <img className="w-24" src={fabric.imageUrl} alt="" />
           <div>
-            <span>{fabric.name}</span>
+            <span className="text-2xl">{fabric.name}</span>
           </div>
           <img className="w-24" src={cuff.imageUrl} alt="" />
           <div>
-            <span>{cuff.name}</span>
+            <span className="text-2xl">{cuff.name}</span>
           </div>
-          <div className="pt-5">
-            <span>Ricami </span>
+          <div className="py-5 self-start">
+            <span className="text-xl">Ricamo </span>
             {sign.do === false ? (
               <p>
                 <p className="font-bold">No</p>
               </p>
             ) : (
               <>
+                <p className="italic text-2xl">{sign.text}</p>
                 <p>
-                  {sign.text} ({sign.font})
+                  {sign.font === "capitalized" ? "(Stampatello)" : "(Corsivo)"}
                 </p>
               </>
             )}
           </div>
-          <div className="pt-5">
-            <h3>Misure</h3>
-            <div className="grid grid-cols-2 gap-2">
+          <div className="pt-5 self-start">
+            <h3 className="text-xl">Misure</h3>
+            <div className="grid grid-cols-2 gap-2 items-end">
               <span>Collo:</span>
-              <span>{measure.neck} cm</span>
+              <span className="text-2xl">{measure.neck} cm</span>
               <span>Spalle:</span>
-              <span>{measure.shoulder} cm</span>
+              <span className="text-2xl">{measure.shoulder} cm</span>
               <span>Torso:</span>
-              <span>{measure.chest} cm</span>
+              <span className="text-2xl">{measure.chest} cm</span>
               <span>Vita:</span>
-              <span>{measure.hips} cm</span>
+              <span className="text-2xl">{measure.hips} cm</span>
               <span>Maniche:</span>
-              <span>{measure.sleeve} cm</span>
+              <span className="text-2xl">{measure.sleeve} cm</span>
             </div>
           </div>
         </div>
       </div>
       <div className="h-16"></div>
-      <div
-        className="fixed grid grid-flow-col items-center border-t px-4 border-t-neutral-300 bottom-0 w-full h-16 bg-white "
-        id="buttons"
-      >
-        <button
-          className="bg-red-900 text-white h-3/4 w-2/5"
-          style={{ width: "6rem" }}
-          onClick={() => navigate("/camicie-personalizzate")}
+      <div className="fixed border-t px-4 border-t-neutral-300 bottom-0 w-full h-16 bg-white ">
+        <div
+          className="grid grid-flow-col items-center w-full h-full xsm:container xsm:mx-auto"
+          id="buttons"
         >
-          Indietro
-        </button>
+          <button
+            className="bg-red-900 text-white h-3/4 w-2/5"
+            style={{ width: "6rem" }}
+            onClick={() => navigate("/camicie-personalizzate")}
+          >
+            Indietro
+          </button>
 
-        <button
-          className="bg-green-900 text-white h-3/4 w-2/5 justify-self-end"
-          style={{ width: "6rem" }}
-          onClick={() => (user ? handleAddToCart() : navigate("/accedi"))}
-        >
-          Aggiungi al carrello
-        </button>
+          <button
+            className="bg-green-900 text-white h-3/4 w-2/5 justify-self-end"
+            style={{ width: "6rem" }}
+            onClick={() => (user ? handleAddToCart() : navigate("/accedi"))}
+          >
+            Aggiungi al carrello
+          </button>
+        </div>
       </div>
     </>
   );
