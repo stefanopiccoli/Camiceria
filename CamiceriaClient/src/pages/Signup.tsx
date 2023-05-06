@@ -15,7 +15,7 @@ export default function Signup() {
     e.preventDefault();
     const api = "/api/users/create";
 
-    if (password !== confirmPassword){
+    if (password !== confirmPassword) {
       setError("Errore: Le password non coincidono");
       return;
     }
@@ -52,47 +52,44 @@ export default function Signup() {
       });
   };
   return (
-    <div className="h-screen pt-16">
-      <div className="text-center">
-        <h1 className="text-3xl">Camiceria</h1>
-        <h1 className="text-xl">Crea il tuo account</h1>
-      </div>
+    <div className="h-screen px-4 py-16 md:py-28 bg-gradient-to-r from-cyan-200 to-cyan-400">
       <form
         onSubmit={(e) => handleSubmit(e)}
-        className="bg-slate border-2 border-slate-900 p-4 w-3/4 md:w-1/3 mx-auto rounded-md mt-12 bg-cyan-600"
+        className="bg-slate border-2 p-4 mx-auto rounded-md mt-12 bg-white/90 shadow-md shadow-slate-900 max-w-[400px] h-[500px]"
       >
-        <p>E-mail:</p>
+        <h1 className="text-3xl text-center pb-10">Registrati</h1>
+        <p className="text-xl">E-mail:</p>
         <input
-          className="w-full"
+          className="w-full shadow-inner"
           type="email"
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <p className="mt-8">Password:</p>
+        <p className="mt-8 text-xl">Password:</p>
 
         <input
-          className="w-full"
+          className="w-full shadow-inner"
           type="password"
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <p className="mt-8">Conferma password:</p>
+        <p className="mt-8 text-xl">Conferma password:</p>
 
         <input
-          className="w-full"
+          className="w-full shadow-inner"
           type="password"
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
         <div className="flex justify-center items-center mt-10">
           <button
-            className="border-2 w-1/2 bg-white text-slate-900 rounded-md"
+            className="border-2 w-1/2 bg-white text-slate-900 text-xl rounded-md"
             type="submit"
           >
             Registrati
           </button>
         </div>
-        <p className="mt-10">
+        <p className="mt-10 text-xl">
           Hai già un account?
           <Link to="/accedi" className="underline underline-offset-1">
             Log In
@@ -100,7 +97,7 @@ export default function Signup() {
         </p>
       </form>
       {error !== "" ? (
-        <div className="bg-red-300 w-5/6 mx-auto mt-10 p-2 rounded-md">
+        <div className="bg-red-400 shadow w-5/6 mx-auto mt-10 p-2 rounded-md">
           {error.split(":")[1]}
         </div>
       ) : null}

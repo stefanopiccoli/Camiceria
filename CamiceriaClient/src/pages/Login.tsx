@@ -45,10 +45,10 @@ export default function Login() {
     // setMessage(msg);
   }, []);
   return (
-    <div className="pt-16">
+    <div className="bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100 via-blue-300 to-blue-500">
       {user ? (
         <div>
-          {user.email}{user.emailVerified}
+          {/* {user.email}{user.emailVerified}
           <div
             onClick={() =>
               signOut(auth)
@@ -57,29 +57,26 @@ export default function Login() {
             }
           >
             logout
-          </div>
+          </div> */}
         </div>
       ) : (
-        <div className="h-screen pt-16">
-          <div className="text-center">
-            <h1 className="text-3xl">Camiceria</h1>
-            <h1 className="text-xl">Accedi</h1>
-          </div>
+        <div className="h-screen py-16 md:py-28 px-4 container mx-auto">
           <form
             onSubmit={(e) => handleSubmit(e)}
-            className="bg-slate border-2 border-slate-900 p-4 w-3/4 mx-auto rounded-md mt-12 bg-cyan-600"
+            className="bg-slate border-2 p-4 mx-auto rounded-md mt-12 bg-white/90 shadow-md shadow-slate-900 max-w-[400px] h-[500px]"
           >
-            <p>E-mail:</p>
+            <h1 className="text-3xl text-center pb-10">Accedi</h1>
+            <p className="text-xl">E-mail:</p>
             <input
-              className="w-full"
+              className="w-full shadow-inner"
               type="email"
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <p className="mt-8">Password:</p>
+            <p className="mt-8 text-xl">Password:</p>
 
             <input
-              className="w-full"
+              className="w-full shadow-inner"
               type="password"
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -87,11 +84,12 @@ export default function Login() {
             <div className="flex justify-center items-center mt-10">
               <button
                 type="submit"
-                className="border-2 w-1/2 bg-white text-slate-900 rounded-md"
-              >Accedi
+                className="border-2 w-1/2 bg-white text-slate-900 text-xl rounded-md"
+              >
+                Accedi
               </button>
             </div>
-            <p className="mt-10">
+            <p className="mt-10 text-xl">
               Non hai ancora un account?{" "}
               <Link to="/registrati" className="underline underline-offset-1">
                 Registrati
@@ -99,7 +97,7 @@ export default function Login() {
             </p>
           </form>
           {error !== "" ? (
-            <div className="bg-red-300 w-5/6 mx-auto mt-10 p-2 rounded-md">
+            <div className="bg-red-400 shadow w-5/6 mx-auto mt-10 p-2 rounded-md">
               {error.split(":")[1]}
             </div>
           ) : null}

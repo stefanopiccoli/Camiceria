@@ -30,8 +30,7 @@ export default function Summary() {
       });
       resetSelection();
       navigate("/carrello");
-      // user ? refreshCart(user?.uid) : null;
-      new Notification("Articolo");
+      new Notification("Carrello",{body:"Hai aggiunto l'articolo nel carrello"});
     }
   };
 
@@ -39,7 +38,7 @@ export default function Summary() {
     if (!("Notification" in window)) {
       console.log("This browser does not support desktop notification");
     } else if (Notification.permission !== "denied") {
-      Notification.requestPermission().then((permission) => {});
+      Notification.requestPermission();
     }
   });
 

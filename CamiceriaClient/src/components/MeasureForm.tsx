@@ -62,6 +62,7 @@ export default function MeasureForm() {
               name=""
               defaultValue={measure.hips}
               maxLength={3}
+              pattern="[1-9]"
               inputMode="numeric"
               onChange={(e) => updateMeasure({ hips: Number(e.target.value) })}
             />
@@ -86,12 +87,18 @@ export default function MeasureForm() {
         prev="sign"
         next="summary"
         selector={
-          measure.chest *
+          (measure.chest *
             measure.hips *
             measure.neck *
             measure.shoulder *
             measure.sleeve ===
-          0
+          0)
+          || isNaN(measure.chest)
+          || isNaN(measure.hips)
+          || isNaN(measure.neck)
+          || isNaN(measure.shoulder)
+          || isNaN(measure.sleeve)
+            
         }
       ></StepNavigationButton>
     </>

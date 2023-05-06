@@ -169,8 +169,8 @@ export function ManageCollars() {
       <div className="fixed top-14 h-12 w-full bg-white px-2 border-bottom border-2 flex items-center justify-center">
         <h1 className="text-xl">Colletti</h1>
       </div>
-      <div className="pt-28 p-3">
-        <form className="flex flex-col gap-y-4">
+      <div className="pt-28 p-3 xsm:container xsm:mx-auto md:grid md:grid-cols-2 md:gap-x-4">
+        <form className="flex flex-col gap-y-4 bg-slate-200 p-2 md:h-[50vh] md:gap-14">
           <div>
             <label className="text-xl">Nome:</label>
             <input
@@ -223,7 +223,7 @@ export function ManageCollars() {
             <Loading />
           ) : (
             collars.map((item, index) => (
-              <div key={item._id} className="flex w-full border-2 gap-2">
+              <div key={item._id} className="flex w-full border-2 gap-2 xl:w-2/3">
                 <div className="flex flex-col items-center">
                   <img src={item.imageUrl} className="w-28" alt="" />
                   <i
@@ -245,19 +245,22 @@ export function ManageCollars() {
                       }))
                     }
                   />
-                  <input
-                    type="number"
-                    name="buttons"
-                    className="w-10 px-2"
-                    defaultValue={item.buttons}
-                    onChange={(e) =>
-                      setUpdate((update) => ({
-                        ...update,
-                        _id: item._id,
-                        buttons: Number(e.target.value),
-                      }))
-                    }
-                  />
+                  <div className="flex items-center gap-x-2">
+                    <label>Bottoni:</label>
+                    <input
+                      type="number"
+                      name="buttons"
+                      className="w-16 px-2"
+                      defaultValue={item.buttons}
+                      onChange={(e) =>
+                        setUpdate((update) => ({
+                          ...update,
+                          _id: item._id,
+                          buttons: Number(e.target.value),
+                        }))
+                      }
+                    />
+                  </div>
                   <button
                     type="button"
                     className="bg-slate-900 text-white h-8 w-2/5 self-end"
@@ -395,8 +398,8 @@ export function ManageFabrics() {
       <div className="fixed top-14 h-12 w-full bg-white px-2 border-bottom border-2 flex items-center justify-center">
         <h1 className="text-xl">Tessuti</h1>
       </div>
-      <div className="pt-28 p-3">
-        <form className="flex flex-col gap-y-4">
+      <div className="pt-28 p-3 xsm:container xsm:mx-auto md:grid md:grid-cols-2 md:gap-x-4">
+        <form className="flex flex-col gap-y-4 bg-slate-200 p-2 md:h-[50vh] md:gap-14">
           <div>
             <label className="text-xl">Nome:</label>
             <input
@@ -433,7 +436,7 @@ export function ManageFabrics() {
             <Loading />
           ) : (
             fabrics.map((item, index) => (
-              <div key={item._id} className="flex w-full border-2 gap-2">
+              <div key={item._id} className="flex w-full border-2 gap-2 xl:w-2/3">
                 <div className="flex flex-col items-center">
                   <img src={item.imageUrl} className="w-28" alt="" />
                   <i
@@ -587,8 +590,8 @@ export function ManageCuffs() {
       <div className="fixed top-14 h-12 w-full bg-white px-2 border-bottom border-2 flex items-center justify-center">
         <h1 className="text-xl">Polsini</h1>
       </div>
-      <div className="pt-28 p-3">
-        <form className="flex flex-col gap-y-4">
+      <div className="pt-28 p-3 xsm:container xsm:mx-auto md:grid md:grid-cols-2 md:gap-x-4">
+        <form className="flex flex-col gap-y-4 bg-slate-200 p-2 md:h-[50vh] md:gap-14">
           <div>
             <label className="text-xl">Nome:</label>
             <input
@@ -625,7 +628,7 @@ export function ManageCuffs() {
             <Loading />
           ) : (
             cuffs.map((item, index) => (
-              <div key={item._id} className="flex w-full border-2 gap-2">
+              <div key={item._id} className="flex w-full border-2 gap-2 xl:w-2/3">
                 <div className="flex flex-col items-center">
                   <img src={item.imageUrl} className="w-28" alt="" />
                   <i
@@ -761,7 +764,7 @@ export function ManageOrders() {
   };
 
   return (
-    <div className={(admin ? "xsm:container xsm:mx-auto mt-20 p-4" : "")}>
+    <div className={admin ? "xsm:container xsm:mx-auto mt-20 p-4" : ""}>
       <div>
         <h1 className="text-2xl">Gestisci gli ordini</h1>
         {admin ? (
