@@ -103,7 +103,7 @@ export default function OrderForm() {
                     className="col-span-3"
                     type="text"
                     value={city}
-                    pattern="[A-Za-z]+"
+                    pattern="[A-Z a-z]+"
                     onChange={(e) => setCity(e.target.value)}
                     required
                   />
