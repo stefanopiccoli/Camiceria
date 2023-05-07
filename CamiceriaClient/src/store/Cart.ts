@@ -29,7 +29,6 @@ export const cartStore = create<Cart & CartActions>((set, get) => ({
 
       let result = await response.json();
       const { cart } = result;
-      console.log(result);
       if (cart) set(() => ({ customShirts: cart.customShirts }));
       else set(() => ({ customShirts: [] }));
     } catch (error) {
@@ -59,7 +58,6 @@ export const cartStore = create<Cart & CartActions>((set, get) => ({
 
       let result = await response.json();
       get().refreshCustomShirts();
-      console.log(result);
     } catch (error) {
       console.log(error);
     }
@@ -75,7 +73,6 @@ export const cartStore = create<Cart & CartActions>((set, get) => ({
           authorization: "Bearer " + token,
         },
       });
-      console.log(response);
       get().refreshCustomShirts();
     } catch (error) {
       console.log(error);
@@ -92,7 +89,6 @@ export const cartStore = create<Cart & CartActions>((set, get) => ({
           authorization: "Bearer " + token,
         },
       });
-      console.log(response);
       get().refreshCustomShirts();
     } catch (error) {
       console.log(error);

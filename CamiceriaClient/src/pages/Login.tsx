@@ -1,8 +1,6 @@
 import {
-  User,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signOut,
 } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { auth } from "../auth/firebase";
@@ -13,7 +11,6 @@ export default function Login() {
   const user = userStore((store) => store.user);
   const setUser = userStore((store) => store.setUser);
   const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -24,8 +21,6 @@ export default function Login() {
       .then((userCredential) => {
         const user = userCredential.user;
         setError("");
-        // if (redirect)
-        //   navigate(redirect);
         navigate(-1);
       })
       .catch((error) => {
@@ -41,8 +36,6 @@ export default function Login() {
         setUser(null);
       }
     });
-    // if (msg)
-    // setMessage(msg);
   }, []);
   return (
     <div className="bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100 via-blue-300 to-blue-500">
@@ -99,11 +92,6 @@ export default function Login() {
           {error !== "" ? (
             <div className="bg-red-400 shadow w-5/6 mx-auto mt-10 p-2 rounded-md">
               {error.split(":")[1]}
-            </div>
-          ) : null}
-          {message !== "" ? (
-            <div className="bg-green-400 w-5/6 mx-auto mt-10 p-2 rounded-md">
-              {message}
             </div>
           ) : null}
         </div>

@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 
 export default function Profile() {
   const token = userStore((store) => store.token);
-  const setToken = userStore((store) => store.setToken);
   const [orders, setOrders] = useState<Order[]>();
 
   const getOrders = async () => {
@@ -20,7 +19,6 @@ export default function Profile() {
       });
 
       let [{ result }] = await response.json();
-      console.log(result);
       setOrders(result);
     } catch (error) {
       console.log(error);
@@ -157,4 +155,3 @@ export default function Profile() {
     </div>
   );
 }
-// TODO: -Modifica stato ordine admin -UI Carrello -Ordina reset carrello -Ordine non vuoto -Limiti dei form

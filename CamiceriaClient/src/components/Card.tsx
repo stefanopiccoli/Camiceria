@@ -1,6 +1,3 @@
-import colletto from "../assets/images/collar.webp";
-import tessuto from "../assets/images/fabric.webp";
-import polsino from "../assets/images/cuff.webp";
 import { selectionStore } from "../store/Selection";
 import {Collar, Cuff, Fabric } from '../interfaces/interfaces';
 

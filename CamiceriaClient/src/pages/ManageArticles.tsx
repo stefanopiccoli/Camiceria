@@ -2,7 +2,7 @@ import colletto from "../assets/images/collar.webp";
 import tessuto from "../assets/images/fabric.webp";
 import polsino from "../assets/images/cuff.webp";
 import ordine from "../assets/images/order.webp";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   Collar,
@@ -70,6 +70,7 @@ export function ManageCollars() {
     navigate("/");
   };
 
+  // FORM
   const [loading, setLoading] = useState(true);
   const [collars, setCollars] = useState<Collar[]>([]);
   const [name, setName] = useState("");
@@ -223,7 +224,10 @@ export function ManageCollars() {
             <Loading />
           ) : (
             collars.map((item, index) => (
-              <div key={item._id} className="flex w-full border-2 gap-2 xl:w-2/3">
+              <div
+                key={item._id}
+                className="flex w-full border-2 gap-2 xl:w-2/3"
+              >
                 <div className="flex flex-col items-center">
                   <img src={item.imageUrl} className="w-28" alt="" />
                   <i
@@ -301,6 +305,7 @@ export function ManageFabrics() {
     navigate("/");
   };
 
+  // FORM
   const [loading, setLoading] = useState(true);
   const [fabrics, setFabrics] = useState<Fabric[]>([]);
   const [name, setName] = useState("");
@@ -436,7 +441,10 @@ export function ManageFabrics() {
             <Loading />
           ) : (
             fabrics.map((item, index) => (
-              <div key={item._id} className="flex w-full border-2 gap-2 xl:w-2/3">
+              <div
+                key={item._id}
+                className="flex w-full border-2 gap-2 xl:w-2/3"
+              >
                 <div className="flex flex-col items-center">
                   <img src={item.imageUrl} className="w-28" alt="" />
                   <i
@@ -496,6 +504,7 @@ export function ManageCuffs() {
     navigate("/");
   };
 
+  // FORM
   const [loading, setLoading] = useState(true);
   const [cuffs, setCuffs] = useState<Cuff[]>([]);
   const [name, setName] = useState("");
@@ -628,7 +637,10 @@ export function ManageCuffs() {
             <Loading />
           ) : (
             cuffs.map((item, index) => (
-              <div key={item._id} className="flex w-full border-2 gap-2 xl:w-2/3">
+              <div
+                key={item._id}
+                className="flex w-full border-2 gap-2 xl:w-2/3"
+              >
                 <div className="flex flex-col items-center">
                   <img src={item.imageUrl} className="w-28" alt="" />
                   <i
@@ -688,6 +700,7 @@ export function ManageOrders() {
     navigate("/");
   };
 
+  // UPDATE STATE
   const handleUpdate = async (orderId: String, status: Order["state"]) => {
     const api = "/api/users/order/update/" + orderId;
     try {
@@ -699,49 +712,11 @@ export function ManageOrders() {
         },
         body: JSON.stringify({ status }),
       });
-      console.log(response);
 
       let result = await response.json();
-      console.log(result);
       getData("/api/users/order/all");
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const renderState = (state: Order["state"]) => {
-    switch (state) {
-      case "pending":
-        return (
-          <p>
-            <i
-              className="fa fa-circle text-sm text-yellow-400"
-              aria-hidden="true"
-            ></i>
-            In lavorazione
-          </p>
-        );
-      case "shipped":
-        return (
-          <i
-            className="fa fa-circle text-sm text-blue-400"
-            aria-hidden="true"
-          ></i>
-        );
-      case "canceled":
-        return (
-          <i
-            className="fa fa-circle text-sm text-red-600"
-            aria-hidden="true"
-          ></i>
-        );
-      case "delivered":
-        return (
-          <i
-            className="fa fa-circle text-sm text-green-700"
-            aria-hidden="true"
-          ></i>
-        );
     }
   };
 
@@ -756,7 +731,6 @@ export function ManageOrders() {
       });
 
       let result = await response.json();
-      console.log(result);
       setUsers(result);
     } catch (error) {
       console.log(error);
@@ -801,7 +775,6 @@ export function ManageOrders() {
                   <p className="justify-self-end">
                     {item.orders.price.toFixed(2)} &euro;
                   </p>
-                  {/* <button onClick={()=>handleUpdate(item.orders._id,item._id,item.orders.state)}>send</button> */}
                 </summary>
 
                 <hr className="my-2 scale-x-150" />

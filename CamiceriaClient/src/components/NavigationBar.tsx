@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../../node_modules/font-awesome/css/font-awesome.min.css";
 import { useState } from "react";
 import { userStore } from "../store/User";

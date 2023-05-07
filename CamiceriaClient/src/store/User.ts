@@ -1,4 +1,3 @@
-import { UserCredential } from "firebase/auth";
 import { create } from "zustand";
 import { User } from "../interfaces/interfaces";
 import { User as FirebaseUser } from "firebase/auth";
@@ -27,14 +26,10 @@ export const userStore = create<User & UserActions>((set, get) => ({
       });
       const result = await response.json();
       console.log(result);
-      if (result.admin === true)
-      set(()=>({admin:true}))
-      else
-      set(()=>({admin:false}))
-
+      if (result.admin === true) set(() => ({ admin: true }));
+      else set(() => ({ admin: false }));
     } catch (error) {
-      // console.log(error);
-      set(()=>({admin: false}))
+      set(() => ({ admin: false }));
     }
   },
 }));

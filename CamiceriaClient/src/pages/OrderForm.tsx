@@ -21,7 +21,6 @@ export default function OrderForm() {
   const [province, setProvince] = useState("");
   const [cap, setCap] = useState("");
   const [price, setPrice] = useState(articles.length);
-  //
 
   // MODAL
   const [showModal, setShowModal] = useState(false);
@@ -63,18 +62,6 @@ export default function OrderForm() {
       console.log(error);
     }
   };
-
-  // useEffect(() => {
-  //   onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       user.getIdToken().then((token) => {
-  //         setToken(token);
-  //       });
-  //     } else {
-  //       setToken(null);
-  //     }
-  //   });
-  // });
 
   useEffect(() => {
     token ? refreshCart() : null;

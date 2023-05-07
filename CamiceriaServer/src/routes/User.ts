@@ -7,8 +7,7 @@ const router = express.Router();
 router.post('/create',controller.createUser);
 router.get('/get/:userId',controller.readUser);
 router.get('/get/',controller.readAllUser);
-router.patch('/update/:userId',controller.updateUser);
-router.delete('/delete/:userId',controller.deleteUser);
+
 
 
 // CART
@@ -23,6 +22,9 @@ router.post('/order/create',controller.addToOrders);
 router.get('/order/:idOrder');
 
 router.use(adminCheck); //ADMIN 
+router.patch('/update/:userId',controller.updateUser);
+router.delete('/delete/:userId',controller.deleteUser);
+
 router.get('/getRole',controller.getRoleUser);
 router.get('/order/all', controller.readAllOrdersAdmin);
 router.patch('/order/update/:id', controller.updateOrderAdmin);
