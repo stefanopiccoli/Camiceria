@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { cartStore } from "../store/Cart";
 import { userStore } from "../store/User";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function CartPage() {
   const token = userStore((store) => store.token);
 
+  const navigate = useNavigate();
   const articles = cartStore((store) => store.customShirts);
 
   const removeCustomShirt = cartStore((store) => store.removeCustomShirt);
@@ -103,8 +104,8 @@ export default function CartPage() {
                       <p>Totale</p>
                       <p>{price.toFixed(2)} &euro;</p>
                     </div>
-                    <button className="bg-green-900 text-white h-3/4 w-[6rem] justify-self-end">
-                      <Link to="/ordine">Ordina</Link>
+                    <button className="bg-green-900 text-white h-3/4 w-[6rem] justify-self-end" onClick={()=>navigate("/ordine")}>
+                      Ordina
                     </button>
                   </div>
                 </div>
